@@ -30,6 +30,8 @@ import androidx.core.content.ContextCompat;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -45,6 +47,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Handler mHandler = new Handler();
     private int RECORD_AUDIO_REQUEST_CODE =123 ;
     private boolean isPlaying = false;
+
+    // la siguiente propiedad es para cambiar mas facilmente el formato de nombre que recibiran los audios por defecto
+    private String formato_del_nombre_por_defecto = "yyyyMMdd_HHmmss";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             file.mkdirs();
         }
 
-        fileName = root.getAbsolutePath() + "/AUR/Audios/" + System.currentTimeMillis() + ".mp3";
+        fileName = root.getAbsolutePath() + "/AUR/Audios/" + nombre_por_defecto() + ".mp3";
         Log.d("filename", fileName);
         mRecorder.setOutputFile(fileName);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
@@ -316,6 +321,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finishAffinity();
             }
         }
+
+    }
+
+
+
+    // metodo para estampar el instante en que se inicia la grabacion
+    private String nombre_por_defecto(){
+
+        // usando la clase Date
+        Date date = new Date();
+        //String fecha = date.toString();
+
+        // usando simple date format
+        SimpleDateFormat sdf = new SimpleDateFormat(formato_del_nombre_por_defecto);
+        String fecha = sdf.format(date);
+
+        return fecha;
+
+        //Toast.makeText(getApplicationContext(),"La fecha es: " + fecha, Toast.LENGTH_LONG).show();
 
     }
 
