@@ -1,8 +1,13 @@
 package com.example.auraudiorecorder;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
@@ -26,6 +31,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
@@ -51,6 +58,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // la siguiente propiedad es para cambiar mas facilmente el formato de nombre que recibiran los audios por defecto
     private String formato_del_nombre_por_defecto = "yyyyMMdd_HHmmss";
+
+
+    //***************************
+    // NOTIFICACIONES
+    //***************************
+    // variablesnecesarias para emitir notificaciones en la barra de estado de android
+    private PendingIntent pendindIntent;
+
+    //solo necesario a partir de android oreo
+    private final static String CHANNEL_ID = "NOTIFICACION";
+
+    private final static int NOTIFICACION_ID = 0;
+    //***************************
+    // FIN de NOTIFICACIONES
+    //***************************
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +203,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             mRecorder.prepare();
             mRecorder.start();
+
+            //llamada a los metodos para lanzar notificaciones en la barra de estado
+            createNotificationChannel("grabando audio");
+            createNotification("grabando audio");
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -343,6 +373,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Toast.makeText(getApplicationContext(),"La fecha es: " + fecha, Toast.LENGTH_LONG).show();
 
     }
+
+
+    //***************************
+    // NOTIFICACIONES
+    //***************************
+    private void createNotification(String mensaje){
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
+
+        //definir el icono
+        builder.setSmallIcon(R.drawable.ic_keyboard_voice_black_24dp);
+
+        builder.setContentTitle(mensaje);
+        builder.setContentText(mensaje);
+
+        builder.setColor(Color.RED);
+
+        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        builder.setLights(Color.RED, 250, 250);
+        //builder.setVibrate(new long[]{1000,1000,1000,1000,1000});
+        //builder.setDefaults(Notification.DEFAULT_SOUND);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
+        notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
+
+    }
+
+    private void createNotificationChannel(String mensaje){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "Notificacion";
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+    }
+
+    //***************************
+    // FIN de NOTIFICACIONES
+    //***************************
 
 
 
