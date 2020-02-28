@@ -186,34 +186,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startRecording() {
+        /*
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        */
         //hay que sustituir el metodo para obtener el path completo del archivo guardado
+        /*
         File root = android.os.Environment.getExternalStorageDirectory();
         File file = new File(root.getAbsolutePath() + "/AUR/Audios");
         if (!file.exists()) {
             file.mkdirs();
         }
+        */
 
+        /*
         fileName = root.getAbsolutePath() + "/AUR/Audios/" + nombre_por_defecto() + ".mp3";
         Log.d("filename", fileName);
         mRecorder.setOutputFile(fileName);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        */
 
+        /*
         try {
             mRecorder.prepare();
             mRecorder.start();
 
-            //llamada a los metodos para lanzar notificaciones en la barra de estado
-            setPendingIntent();
-            createNotification("grabando...");
-
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+        */
+
+        //codigo para llamar al ServicioGrabacion
+        Intent migrabacion = new Intent(getApplicationContext(), ServicioGrabacion.class);
+        getApplicationContext().startService(migrabacion);
+
+
+        //llamada a los metodos para lanzar notificaciones en la barra de estado
+        setPendingIntent();
+        createNotification("grabando...");
 
         lastProgress = 0;
         seekBar.setProgress(0);
@@ -226,13 +237,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void stopRecording() {
-        try {
+        /*try {
             mRecorder.stop();
             mRecorder.release();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mRecorder = null;
+        mRecorder = null;*/
+
+        //codigo para llamar al ServicioGrabacion
+        Intent migrabacion = new Intent(getApplicationContext(), ServicioGrabacion.class);
+        getApplicationContext().stopService(migrabacion);
+
 
         //detener el cronometro
         chronometer.stop();

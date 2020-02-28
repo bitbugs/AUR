@@ -25,6 +25,10 @@
             android:configChanges="orientation|screenSize">
 
         </activity>
+
+        <service android:name=".ServicioGrabacion"
+            android:enabled="true"></service>
+
     </application>
 
 </manifest>
