@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 // comentario para probar las ramas y el pull
+// mi comentario Jorge
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
