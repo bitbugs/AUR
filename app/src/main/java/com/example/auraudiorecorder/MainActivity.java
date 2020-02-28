@@ -415,7 +415,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setContentIntent(pendindIntent);
 
         //Acciones desde la notificacion
-        builder.addAction(R.drawable.ic_stop_white_24dp, "STOP recording", stopRecording());
+        //builder.addAction(R.drawable.ic_stop_white_24dp, "STOP recording", stopRecording());
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
         notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
