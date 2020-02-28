@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -205,8 +206,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mRecorder.start();
 
             //llamada a los metodos para lanzar notificaciones en la barra de estado
-            createNotificationChannel("grabando audio");
-            createNotification("grabando audio");
+            setPendingIntent();
+            createNotification("grabando...");
 
 
 
@@ -378,7 +379,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //***************************
     // NOTIFICACIONES
     //***************************
+    private void setPendingIntent(){
+        Intent intent = new Intent(this, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        //stackBuilder.addParentStack();
+        stackBuilder.addNextIntent(intent);
+        pendindIntent = stackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
     private void createNotification(String mensaje){
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "Notificacion";
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
 
@@ -386,28 +402,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setSmallIcon(R.drawable.ic_keyboard_voice_black_24dp);
 
         builder.setContentTitle(mensaje);
-        builder.setContentText(mensaje);
+        //builder.setContentText(mensaje);
 
         builder.setColor(Color.RED);
 
         builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        builder.setLights(Color.RED, 250, 250);
+        builder.setLights(Color.WHITE, 500, 500);
         //builder.setVibrate(new long[]{1000,1000,1000,1000,1000});
         //builder.setDefaults(Notification.DEFAULT_SOUND);
+
+        builder.setContentIntent(pendindIntent);
+
+        //Acciones desde la notificacion
+        builder.addAction(R.drawable.ic_stop_white_24dp, "STOP recording", stopRecording());
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
         notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
 
-    }
-
-    private void createNotificationChannel(String mensaje){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "Notificacion";
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
     }
 
     //***************************
