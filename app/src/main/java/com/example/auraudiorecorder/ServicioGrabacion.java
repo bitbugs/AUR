@@ -19,9 +19,11 @@ import java.util.Date;
 public class ServicioGrabacion extends Service {
 
 
-    File root = android.os.Environment.getExternalStorageDirectory();
+    private File root;
+    private File file;
     private MediaRecorder mRecorder;
-    private String fileName = null;
+    public String fileName;
+
     // la siguiente propiedad es para cambiar mas facilmente el formato de nombre que recibiran los audios por defecto
     private String formato_del_nombre_por_defecto = "yyyyMMdd_HHmmss";
 
@@ -44,22 +46,41 @@ public class ServicioGrabacion extends Service {
         //super.onCreate();
         Toast.makeText(this, "ServicioGrabacion.onCreate().", Toast.LENGTH_SHORT).show();
 
+        //*******************************
+        // preparacion de la grabacion
+        //*******************************
+        /*mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);*/
+
+        root = android.os.Environment.getExternalStorageDirectory();
+        file = new File(root.getAbsolutePath() + "/AUR/Audios");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+
+        //*******************************
+        // preparacion de la grabacion
+        //*******************************
+
+
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
 
-        mRecorder = new MediaRecorder();
+        /*mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);*/
 
         //hay que sustituir el metodo para obtener el path completo del archivo guardado
-        //File root = android.os.Environment.getExternalStorageDirectory();
+        /*File root = android.os.Environment.getExternalStorageDirectory();
         File file = new File(root.getAbsolutePath() + "/AUR/Audios");
         if (!file.exists()) {
             file.mkdirs();
-        }
+        }*/
 
 
 
@@ -96,7 +117,6 @@ public class ServicioGrabacion extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-
         return iBinder;
     }
 
@@ -104,9 +124,19 @@ public class ServicioGrabacion extends Service {
     //********************************
     // FUNCIONES DE GRABACION
     //********************************
-    public String startRecording() {
+    public void startRecording() {
 
-        /*fileName = root.getAbsolutePath() + "/AUR/Audios/" + nombre_por_defecto() + ".mp3";
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+
+        /*root = android.os.Environment.getExternalStorageDirectory();
+        file = new File(root.getAbsolutePath() + "/AUR/Audios");
+        if (!file.exists()) {
+            file.mkdirs();
+        }*/
+
+        fileName = root.getAbsolutePath() + "/AUR/Audios/" + nombre_por_defecto() + ".mp3";
         Log.d("filename", fileName);
         mRecorder.setOutputFile(fileName);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
@@ -116,23 +146,23 @@ public class ServicioGrabacion extends Service {
             mRecorder.start();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
 
-        return "Service: grabando...";
+        Toast.makeText(this, "Servicio Grabando...", Toast.LENGTH_LONG).show();
     }
 
 
-    public String stopRecording() {
+    public void stopRecording() {
 
-        /*try {
+        try {
             mRecorder.stop();
             mRecorder.release();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mRecorder = null;*/
+        mRecorder = null;
 
-        return "Service: grabacion finalizada.";
+        Toast.makeText(this, "Servicio Grabacion finalizada.", Toast.LENGTH_LONG).show();
     }
 
     //********************************

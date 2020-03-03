@@ -98,7 +98,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //bindService - conecta con ServicioGrabacion
         //*********************************************
         Intent intent = new Intent(MainActivity.this, ServicioGrabacion.class);
+
+        //al ejecutar el startService()logro que el servicio permanesca abierto aunque la app haya sido cerrada
+        //getApplicationContext().startService(intent);
+
         bindService(intent, sConnection, Context.BIND_AUTO_CREATE);
+
         //*********************************************
         //bindService - conecta con ServicioGrabacion
         //*********************************************
@@ -193,12 +198,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (view == imageViewRecord) {
             prepareForRecording();
             //startRecording();
-            Toast.makeText(this, "click al rec: "+ mService.startRecording(), Toast.LENGTH_LONG).show();
+            mService.startRecording();
+
+            //llamada a los metodos para lanzar notificaciones en la barra de estado
+            /*setPendingIntent();
+            createNotification("grabando...");*/
+
+            lastProgress = 0;
+            seekBar.setProgress(0);
+            stopPlaying();
+            //el imageview cambia al boton de STOP
+            //comenzar el cronometro
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+
 
         } else if (view == imageViewStop) {
             prepareForStop();
             //stopRecording();
-            Toast.makeText(this, "click al stop: "+ mService.stopRecording(), Toast.LENGTH_LONG).show();
+            mService.stopRecording();
+
+            //detener el cronometro
+            chronometer.stop();
+            chronometer.setBase(SystemClock.elapsedRealtime());
 
         } else if (view == imageViewPlay) {
             if (!isPlaying && fileName != null) {
