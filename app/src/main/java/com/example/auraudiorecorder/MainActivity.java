@@ -6,7 +6,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -15,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.SystemClock;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -57,8 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int RECORD_AUDIO_REQUEST_CODE =123 ;
     private boolean isPlaying = false;
 
-    // la siguiente propiedad es para cambiar mas facilmente el formato de nombre que recibiran los audios por defecto
-    private String formato_del_nombre_por_defecto = "yyyyMMdd_HHmmss";
 
 
     //***************************
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         //establecer la condicion para pedir o no los permisos
@@ -88,8 +91,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //inicializar las vistas
         initViews();
+        //Toast.makeText(this, "se ejecuto el onCreate" , Toast.LENGTH_LONG).show();
+
+
+        //*********************************************
+        //bindService - conecta con ServicioGrabacion
+        //*********************************************
+        Intent intent = new Intent(MainActivity.this, ServicioGrabacion.class);
+        bindService(intent, sConnection, Context.BIND_AUTO_CREATE);
+        //*********************************************
+        //bindService - conecta con ServicioGrabacion
+        //*********************************************
 
     }
+
+
+    //*************************************
+    // para conectar al servicio
+    //*************************************
+    private ServicioGrabacion mService;
+
+    private ServiceConnection sConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            ServicioGrabacion.MiBinder binder = (ServicioGrabacion.MiBinder) service;
+            mService = binder.getService();
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+    };
+    //*************************************
+    // para conectar al servicio
+    //*************************************
+
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle estado){
+        super.onSaveInstanceState(estado);
+    }
+
+
+
 
     //metodo para inicializar las vistas
     private void initViews() {
@@ -138,24 +183,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
+
+    //**************************
+    // MANEJADOR DELOS CLICKS
+    //**************************
     @Override
     public void onClick(View view) {
+
         if (view == imageViewRecord) {
             prepareForRecording();
-            startRecording();
+            //startRecording();
+            Toast.makeText(this, "click al rec: "+ mService.startRecording(), Toast.LENGTH_LONG).show();
+
         } else if (view == imageViewStop) {
             prepareForStop();
-            stopRecording();
+            //stopRecording();
+            Toast.makeText(this, "click al stop: "+ mService.stopRecording(), Toast.LENGTH_LONG).show();
+
         } else if (view == imageViewPlay) {
             if (!isPlaying && fileName != null) {
                 isPlaying = true;
-                startPlaying();
+                //startPlaying();
+                Toast.makeText(this, "click algo: "+ mService.saludo, Toast.LENGTH_LONG).show();
+
             } else {
                 isPlaying = false;
-                stopPlaying();
+                //stopPlaying();
+                Toast.makeText(this, "click al play: "+ mService.saludo, Toast.LENGTH_LONG).show();
+
             }
         }
     }
+    //**************************
+    // MANEJADOR DELOS CLICKS
+    //**************************
+
+
 
     //los metodos prepareFor se aseguran que se vean los iconos adecuados, y maneja la transicion entre ellos
     private void prepareForStop() {
@@ -184,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageViewPlay.setImageResource(R.drawable.ic_play);
         chronometer.stop();
     }
+
 
     private void startRecording() {
         /*
@@ -218,8 +282,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         */
 
         //codigo para llamar al ServicioGrabacion
-        Intent migrabacion = new Intent(getApplicationContext(), ServicioGrabacion.class);
-        getApplicationContext().startService(migrabacion);
+        //Intent migrabacion = new Intent(getApplicationContext(), ServicioGrabacion.class);
+        //getApplicationContext().startService(migrabacion);
 
 
         //llamada a los metodos para lanzar notificaciones en la barra de estado
@@ -374,22 +438,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-    // metodo para estampar el instante en que se inicia la grabacion
-    private String nombre_por_defecto(){
-
-        // usando la clase Date
-        Date date = new Date();
-        //String fecha = date.toString();
-
-        // usando simple date format
-        SimpleDateFormat sdf = new SimpleDateFormat(formato_del_nombre_por_defecto);
-        String fecha = sdf.format(date);
-
-        return fecha;
-
-        //Toast.makeText(getApplicationContext(),"La fecha es: " + fecha, Toast.LENGTH_LONG).show();
-
-    }
 
 
     //***************************
