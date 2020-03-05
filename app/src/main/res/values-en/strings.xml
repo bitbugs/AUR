@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AUR audio recorder</string>
+    <string name="acerca_de">About</string>
+    <string name="sugerencias">Tips</string>
+    <string name="preferencias">Preferences</string>
+    <string name="lista">List</string>
+    <string name="acercaDeText">Developed by bitbugs, under the 2nd year project of the BIT program. bitbugs\'s members are: Jorge Arcelus, Rafael Burgueño and Soledad Echinope.</string>
+    <string name="tipsText">On this window you can see different tips for using the application, so that users can take better advantage of the app\'s capabilities.</string>
+    <string name="title_activity_tips">TipsActivity</string>
+    <string name="no_se_encontraron_grabaciones">No records where found.</string>
+    <string name="reproducir">play</string>
+    <string name="grabar">record</string>
+    <string name="detener">stop</string>
+    <string name="lista_grabaciones_title">Recordings List</string>
+</resources>

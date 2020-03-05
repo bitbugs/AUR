@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">AUR audio recorder</string>
+    <string name="acerca_de">Acerca de…</string>
+    <string name="sugerencias">Sugerencias</string>
+    <string name="preferencias">Preferencias</string>
+    <string name="lista">Lista</string>
+    <string name="acercaDeText">Desarrollado por bitbugs, en el marco del proyecto de 2do año del programa BIT. bitbugs está conformado por Jorge Arcelus, Rafael Burgueño y Soledad Echinope.</string>
+    <string name="tipsText">En esta ventana se ven diferentes sugerencias de uso de la aplicación, para que los usuarios puedan aprovechar mejor las capacidades de la app.</string>
+    <string name="no_se_encontraron_grabaciones">No se encontraron grabaciones.</string>
+    <string name="reproducir">reproducir</string>
+    <string name="grabar">grabar</string>
+    <string name="detener">detener</string>
+    <string name="lista_grabaciones_title">Lista de grabaciones</string>
 </resources>

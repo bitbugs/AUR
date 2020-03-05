@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="formatosGrabacion">
+        <item>wav (mejor calidad, archivo más grande)</item>
+        <item>mp3 (alta calidad, archivo menos grande)</item>
+        <item>aac (buena calidad, archivo de tamaño promedio)</item>
+        <item>3gpp (baja calidad, archivo pequeño)</item>
+    </string-array>
+    <string-array name="formatosGrabacionValores">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="muestreoGrabacion">
+        <item>8 kHz (menor calidad)</item>
+        <item>11 kHz (calidad de teléfono)</item>
+        <item>16 kHz (calidad estándar)</item>
+        <item>22 kHz (calidad de radio AM)</item>
+        <item>44 kHz (calidad de CD)</item>
+    </string-array>
+    <string-array name="muestreoGrabacionValores">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+</resources>
