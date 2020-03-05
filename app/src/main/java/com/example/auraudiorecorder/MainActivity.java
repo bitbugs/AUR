@@ -2,6 +2,7 @@ package com.example.auraudiorecorder;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -26,6 +27,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -129,6 +131,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
+    public void mostrarPreferencias(View view) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String s = "tema oscuro: " + pref.getBoolean("temaOscuro", false)
+                + ", formato de archivo: " + pref.getString("formatoGrabacion", "?")
+                + ", muestreo de la grabacion: " + pref.getString("muestreoGrabacion", "?");
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
     private void lanzarTipsActivity(View view) {
         Intent intent = new Intent(this, TipsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -141,9 +151,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
-    public void mostrarPreferencias(View view) {
-
-    }
 
     @Override
     public void onClick(View view) {
