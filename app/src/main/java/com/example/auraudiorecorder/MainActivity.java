@@ -60,7 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Handler mHandler = new Handler();
     private int RECORD_AUDIO_REQUEST_CODE =123 ;
     private boolean isPlaying = false;
-
+    private boolean isRecording = false;
+    private ServicioGrabacion mService;
+    Intent intent = new Intent(MainActivity.this, ServicioGrabacion.class);
 
 
     //***************************
@@ -68,10 +70,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //***************************
     // variablesnecesarias para emitir notificaciones en la barra de estado de android
     private PendingIntent pendindIntent;
-
     //solo necesario a partir de android oreo
     private final static String CHANNEL_ID = "NOTIFICACION";
-
     private final static int NOTIFICACION_ID = 0;
     //***************************
     // FIN de NOTIFICACIONES
@@ -89,24 +89,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getPermissionToRecordAudio();
         }
 
+        //*********************************************
+        //bindService - conecta con ServicioGrabacion
+        //*********************************************
+        //Intent intent = new Intent(MainActivity.this, ServicioGrabacion.class);
+
+        //al ejecutar el startService()logro que el servicio permanesca abierto aunque la app haya sido cerrada
+        getApplicationContext().startService(intent);
+
+        bindService(intent, sConnection, Context.BIND_AUTO_CREATE);
+        //*********************************************
+        //bindService - conecta con ServicioGrabacion
+        //*********************************************
+
+
         //inicializar las vistas
         initViews();
         //Toast.makeText(this, "se ejecuto el onCreate" , Toast.LENGTH_LONG).show();
 
+    }
 
-        //*********************************************
-        //bindService - conecta con ServicioGrabacion
-        //*********************************************
-        Intent intent = new Intent(MainActivity.this, ServicioGrabacion.class);
+    @Override
+    protected void onResume() {
 
-        //al ejecutar el startService()logro que el servicio permanesca abierto aunque la app haya sido cerrada
-        //getApplicationContext().startService(intent);
+        Toast.makeText(this, "ejecute el onResume() del activity", Toast.LENGTH_LONG).show();
+        super.onResume();
 
-        bindService(intent, sConnection, Context.BIND_AUTO_CREATE);
-
-        //*********************************************
-        //bindService - conecta con ServicioGrabacion
-        //*********************************************
+        if(mService != null){
+            if(mService.isRecording){
+                Toast.makeText(this, "el servicio SI esta grabando", Toast.LENGTH_LONG).show();
+            }
+        }
 
     }
 
@@ -114,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //*************************************
     // para conectar al servicio
     //*************************************
-    private ServicioGrabacion mService;
+
 
     private ServiceConnection sConnection = new ServiceConnection() {
         @Override
@@ -143,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //metodo para inicializar las vistas
     private void initViews() {
+
         //establecer la toolbar
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("AUR audio recorder");
@@ -199,10 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             prepareForRecording();
             //startRecording();
             mService.startRecording();
-
-            //llamada a los metodos para lanzar notificaciones en la barra de estado
-            /*setPendingIntent();
-            createNotification("grabando...");*/
+            isRecording = mService.isRecording;
 
             lastProgress = 0;
             seekBar.setProgress(0);
@@ -212,11 +223,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             chronometer.setBase(SystemClock.elapsedRealtime());
             chronometer.start();
 
+            //llamada a los metodos para lanzar notificaciones en la barra de estado
+            setPendingIntent();
+            createNotification("grabando...");
 
         } else if (view == imageViewStop) {
             prepareForStop();
             //stopRecording();
             mService.stopRecording();
+            isRecording = mService.isRecording;
 
             //detener el cronometro
             chronometer.stop();
@@ -226,12 +241,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (!isPlaying && fileName != null) {
                 isPlaying = true;
                 //startPlaying();
-                Toast.makeText(this, "click algo: "+ mService.saludo, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "click algo: "+ mService.propiedad, Toast.LENGTH_LONG).show();
 
             } else {
                 isPlaying = false;
                 //stopPlaying();
-                Toast.makeText(this, "click al play: "+ mService.saludo, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "click al play: "+ mService.propiedad, Toast.LENGTH_LONG).show();
 
             }
         }
@@ -322,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void stopRecording() {
+    public void stopRecording() {
         /*try {
             mRecorder.stop();
             mRecorder.release();
@@ -332,16 +347,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mRecorder = null;*/
 
         //codigo para llamar al ServicioGrabacion
-        Intent migrabacion = new Intent(getApplicationContext(), ServicioGrabacion.class);
-        getApplicationContext().stopService(migrabacion);
+        /*Intent migrabacion = new Intent(getApplicationContext(), ServicioGrabacion.class);
+        getApplicationContext().stopService(migrabacion);*/
 
-
+        mService.stopRecording();
         //detener el cronometro
         chronometer.stop();
         chronometer.setBase(SystemClock.elapsedRealtime());
-
-        //mostrar mensaje
-        Toast.makeText(this, "La grabación fue guardada con éxito.", Toast.LENGTH_SHORT).show();
     }
 
     private void startPlaying() {
@@ -487,14 +499,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //definir el icono
         builder.setSmallIcon(R.drawable.ic_keyboard_voice_black_24dp);
 
-        builder.setContentTitle(mensaje);
-        //builder.setContentText(mensaje);
+        builder.setContentTitle("AUR Audio Recorder");
+        builder.setContentText(mensaje);
 
         builder.setColor(Color.RED);
 
         builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        builder.setLights(Color.WHITE, 500, 500);
+        builder.setLights(Color.WHITE, 1000, 1000);
         //builder.setVibrate(new long[]{1000,1000,1000,1000,1000});
         //builder.setDefaults(Notification.DEFAULT_SOUND);
 
@@ -502,6 +514,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Acciones desde la notificacion
         //builder.addAction(R.drawable.ic_stop_white_24dp, "STOP recording", stopRecording());
+
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
         notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());

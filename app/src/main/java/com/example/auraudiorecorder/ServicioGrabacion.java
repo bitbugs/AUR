@@ -31,7 +31,7 @@ public class ServicioGrabacion extends Service {
 
     public boolean isRecording = false;
 
-    public String saludo = "hola soy una propiedad del servicio";
+    public String propiedad = "propiedad del servicio";
 
 
     public class MiBinder extends Binder {
@@ -44,7 +44,7 @@ public class ServicioGrabacion extends Service {
     @Override
     public void onCreate(){
         //super.onCreate();
-        Toast.makeText(this, "ServicioGrabacion.onCreate().", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "ServicioGrabacion.onCreate().", Toast.LENGTH_LONG).show();
 
         //*******************************
         // preparacion de la grabacion
@@ -84,7 +84,7 @@ public class ServicioGrabacion extends Service {
 
 
 
-        Toast.makeText(this, "ServicioGrabacion.onStartCommand().", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "ServicioGrabacion.onStartCommand().", Toast.LENGTH_LONG).show();
         return START_STICKY;
     }
 
@@ -92,7 +92,11 @@ public class ServicioGrabacion extends Service {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Toast.makeText(this, "ServicioGrabacion.onDestroy().", Toast.LENGTH_SHORT).show();
+
+        if(isRecording){
+            stopRecording();
+        }
+        Toast.makeText(this, "ServicioGrabacion.onDestroy().", Toast.LENGTH_LONG).show();
     }
 
 
@@ -144,6 +148,7 @@ public class ServicioGrabacion extends Service {
         try {
             mRecorder.prepare();
             mRecorder.start();
+            isRecording = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -157,6 +162,7 @@ public class ServicioGrabacion extends Service {
         try {
             mRecorder.stop();
             mRecorder.release();
+            isRecording = false;
         } catch (Exception e) {
             e.printStackTrace();
         }
