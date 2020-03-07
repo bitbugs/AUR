@@ -30,8 +30,7 @@ public class ServicioGrabacion extends Service {
     private final IBinder iBinder = new MiBinder();
 
     public boolean isRecording = false;
-
-    public String propiedad = "propiedad del servicio";
+    public String estado = "servicio apagado";
 
 
     public class MiBinder extends Binder {
@@ -43,8 +42,10 @@ public class ServicioGrabacion extends Service {
 
     @Override
     public void onCreate(){
-        //super.onCreate();
-        Toast.makeText(this, "ServicioGrabacion.onCreate().", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "El ServicioGrabacion ejecuto onCreate()" , Toast.LENGTH_SHORT).show();
+        Log.d("metodo", "El ServicioGrabacion ejecuto onCreate()");
+
+        super.onCreate();
 
         //*******************************
         // preparacion de la grabacion
@@ -64,39 +65,27 @@ public class ServicioGrabacion extends Service {
         // preparacion de la grabacion
         //*******************************
 
-
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
+        //Toast.makeText(this, "El ServicioGrabacion ejecuto onStartCommand()" , Toast.LENGTH_SHORT).show();
+        Log.d("metodo", "El ServicioGrabacion ejecuto onStartCommand()");
 
-        /*mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);*/
-
-        //hay que sustituir el metodo para obtener el path completo del archivo guardado
-        /*File root = android.os.Environment.getExternalStorageDirectory();
-        File file = new File(root.getAbsolutePath() + "/AUR/Audios");
-        if (!file.exists()) {
-            file.mkdirs();
-        }*/
-
-
-
-        Toast.makeText(this, "ServicioGrabacion.onStartCommand().", Toast.LENGTH_LONG).show();
         return START_STICKY;
     }
 
 
     @Override
     public void onDestroy(){
+        //Toast.makeText(this, "El ServicioGrabacion ejecuto onDestroy()" , Toast.LENGTH_SHORT).show();
+        Log.d("metodo", "El ServicioGrabacion ejecuto onDestroy()");
+
+        stopRecording();
+
         super.onDestroy();
 
-        if(isRecording){
-            stopRecording();
-        }
-        Toast.makeText(this, "ServicioGrabacion.onDestroy().", Toast.LENGTH_LONG).show();
     }
 
 
@@ -121,8 +110,14 @@ public class ServicioGrabacion extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        //Toast.makeText(this, "El ServicioGrabacion ejecuto onBind()" , Toast.LENGTH_SHORT).show();
+        Log.d("metodo", "El ServicioGrabacion ejecuto onBind()");
+
         return iBinder;
     }
+
+
+
 
 
     //********************************
@@ -130,45 +125,57 @@ public class ServicioGrabacion extends Service {
     //********************************
     public void startRecording() {
 
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        if(!isRecording) {
 
-        /*root = android.os.Environment.getExternalStorageDirectory();
-        file = new File(root.getAbsolutePath() + "/AUR/Audios");
-        if (!file.exists()) {
+            mRecorder = new MediaRecorder();
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB);
+
+
+            /*root = android.os.Environment.getExternalStorageDirectory();
+            file = new File(root.getAbsolutePath() + "/AUR/Audios");
+            if (!file.exists()) {
             file.mkdirs();
-        }*/
+            }*/
 
-        fileName = root.getAbsolutePath() + "/AUR/Audios/" + nombre_por_defecto() + ".mp3";
-        Log.d("filename", fileName);
-        mRecorder.setOutputFile(fileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            fileName = root.getAbsolutePath() + "/AUR/Audios/" + nombre_por_defecto() + ".mp3";
+            //Log.d("filename", fileName);
+            mRecorder.setOutputFile(fileName);
 
-        try {
-            mRecorder.prepare();
-            mRecorder.start();
-            isRecording = true;
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                mRecorder.prepare();
+                mRecorder.start();
+                isRecording = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            estado = "Grabando...";
+            Toast.makeText(this, "Gravesen...", Toast.LENGTH_SHORT).show();
+            Log.d("metodo", "Gravesen...");
         }
 
-        Toast.makeText(this, "Servicio Grabando...", Toast.LENGTH_LONG).show();
     }
 
 
     public void stopRecording() {
 
-        try {
-            mRecorder.stop();
-            mRecorder.release();
-            isRecording = false;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mRecorder = null;
+        if(isRecording) {
+            try {
+                mRecorder.stop();
+                mRecorder.release();
+                isRecording = false;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mRecorder = null;
 
-        Toast.makeText(this, "Servicio Grabacion finalizada.", Toast.LENGTH_LONG).show();
+            estado = "Grabacion detenida";
+            Toast.makeText(this, "La grabacion se ha detenido", Toast.LENGTH_SHORT).show();
+            Log.d("metodo", "La grabacion se ha detenido");
+        }
+
     }
 
     //********************************

@@ -62,17 +62,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isPlaying = false;
     private boolean isRecording = false;
     private ServicioGrabacion mService;
-    Intent intent = new Intent(MainActivity.this, ServicioGrabacion.class);
+
+    Intent intentGrabacion;
+
 
 
     //***************************
     // NOTIFICACIONES
     //***************************
-    // variablesnecesarias para emitir notificaciones en la barra de estado de android
-    private PendingIntent pendindIntent;
-    //solo necesario a partir de android oreo
-    private final static String CHANNEL_ID = "NOTIFICACION";
-    private final static int NOTIFICACION_ID = 0;
+    NotificationCompat.Builder notificacion;
+    private static final int idUnica = 0;
+    String channelId = "mi_channel_01";
     //***************************
     // FIN de NOTIFICACIONES
     //***************************
@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Toast.makeText(this, "El MainActivity ejecuto onCreate()" , Toast.LENGTH_SHORT).show();
+        //Log.d("metodo", "El MainActivity ejecuto onCreate()");
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -92,12 +95,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //*********************************************
         //bindService - conecta con ServicioGrabacion
         //*********************************************
-        //Intent intent = new Intent(MainActivity.this, ServicioGrabacion.class);
+        intentGrabacion = new Intent(MainActivity.this, ServicioGrabacion.class);
 
         //al ejecutar el startService()logro que el servicio permanesca abierto aunque la app haya sido cerrada
-        getApplicationContext().startService(intent);
+        //getApplicationContext().startService(intent);
 
-        bindService(intent, sConnection, Context.BIND_AUTO_CREATE);
+        bindService(intentGrabacion, sConnection, Context.BIND_AUTO_CREATE);
         //*********************************************
         //bindService - conecta con ServicioGrabacion
         //*********************************************
@@ -105,22 +108,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //inicializar las vistas
         initViews();
-        //Toast.makeText(this, "se ejecuto el onCreate" , Toast.LENGTH_LONG).show();
+
+
+        //crearNotificacion("Bienvenido");
+
+
 
     }
 
+    @Override protected void onStart() {
+        //Toast.makeText(this, "El MainActivity ejecuto onStart()", Toast.LENGTH_SHORT).show();
+        //Log.d("metodo", "El MainActivity ejecuto onStart()");
+        super.onStart();
+    }
     @Override
     protected void onResume() {
-
-        Toast.makeText(this, "ejecute el onResume() del activity", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "El MainActivity ejecuto onResume()", Toast.LENGTH_SHORT).show();
+        //Log.d("metodo", "El MainActivity ejecuto onResume()");
         super.onResume();
 
-        if(mService != null){
-            if(mService.isRecording){
-                Toast.makeText(this, "el servicio SI esta grabando", Toast.LENGTH_LONG).show();
-            }
-        }
+    }
+    @Override protected void onPause() {
+        //Toast.makeText(this, "El MainActivity ejecuto onPause()", Toast.LENGTH_SHORT).show();
+        //Log.d("metodo", "El MainActivity ejecuto onPause()");
+        super.onPause();
+    }
+    @Override protected void onStop() {
+        //Toast.makeText(this, "El MainActivity ejecuto onStop()", Toast.LENGTH_SHORT).show();
+        //Log.d("metodo", "El MainActivity ejecuto onStop()");
+        super.onStop();
+    }
+    @Override protected void onRestart() {
+        //String estado = mService.estado;
 
+        //Toast.makeText(this, "El MainActivity ejecuto onRestart() y el estado del servicio es: " + estado, Toast.LENGTH_LONG).show();
+        //Log.d("metodo", "El MainActivity ejecuto onRestart() y el estado del servicio es: " + estado);
+        super.onRestart();
+    }
+    @Override protected void onDestroy() {
+        //Toast.makeText(this, "El MainActivity ejecuto onDestroy()", Toast.LENGTH_SHORT).show();
+        //Log.d("metodo", "El MainActivity ejecuto onDestroy()");
+        super.onDestroy();
     }
 
 
@@ -156,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //metodo para inicializar las vistas
     private void initViews() {
-
         //establecer la toolbar
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("AUR audio recorder");
@@ -211,42 +238,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (view == imageViewRecord) {
             prepareForRecording();
-            //startRecording();
+
             mService.startRecording();
-            isRecording = mService.isRecording;
 
             lastProgress = 0;
             seekBar.setProgress(0);
             stopPlaying();
             //el imageview cambia al boton de STOP
+
             //comenzar el cronometro
             chronometer.setBase(SystemClock.elapsedRealtime());
             chronometer.start();
 
-            //llamada a los metodos para lanzar notificaciones en la barra de estado
-            setPendingIntent();
-            createNotification("grabando...");
+            //Crea una notificacion en la barra de estado de android
+            crearNotificacion("Grabando...");
+            fileName = mService.fileName;
 
         } else if (view == imageViewStop) {
             prepareForStop();
-            //stopRecording();
+
             mService.stopRecording();
-            isRecording = mService.isRecording;
 
             //detener el cronometro
             chronometer.stop();
             chronometer.setBase(SystemClock.elapsedRealtime());
 
+            //Crea una notificacion en la barra de estado de android
+            crearNotificacion("Grabacion detenida.");
+
         } else if (view == imageViewPlay) {
             if (!isPlaying && fileName != null) {
-                isPlaying = true;
-                //startPlaying();
-                Toast.makeText(this, "click algo: "+ mService.propiedad, Toast.LENGTH_LONG).show();
+
+                startPlaying();
 
             } else {
-                isPlaying = false;
-                //stopPlaying();
-                Toast.makeText(this, "click al play: "+ mService.propiedad, Toast.LENGTH_LONG).show();
+
+                stopPlaying();
+
 
             }
         }
@@ -272,6 +300,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         linearLayoutPlay.setVisibility(View.GONE);
     }
 
+
+
+    //********************************
+    // FUNCIONES DE REPRODUCCION
+    //********************************
     private void stopPlaying() {
         try {
             mPlayer.release();
@@ -286,75 +319,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void startRecording() {
-        /*
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        */
-        //hay que sustituir el metodo para obtener el path completo del archivo guardado
-        /*
-        File root = android.os.Environment.getExternalStorageDirectory();
-        File file = new File(root.getAbsolutePath() + "/AUR/Audios");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        */
-
-        /*
-        fileName = root.getAbsolutePath() + "/AUR/Audios/" + nombre_por_defecto() + ".mp3";
-        Log.d("filename", fileName);
-        mRecorder.setOutputFile(fileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        */
-
-        /*
-        try {
-            mRecorder.prepare();
-            mRecorder.start();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
-
-        //codigo para llamar al ServicioGrabacion
-        //Intent migrabacion = new Intent(getApplicationContext(), ServicioGrabacion.class);
-        //getApplicationContext().startService(migrabacion);
-
-
-        //llamada a los metodos para lanzar notificaciones en la barra de estado
-        setPendingIntent();
-        createNotification("grabando...");
-
-        lastProgress = 0;
-        seekBar.setProgress(0);
-        stopPlaying();
-        //el imageview cambia al boton de STOP
-        //comenzar el cronometro
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        chronometer.start();
-    }
-
-
-    public void stopRecording() {
-        /*try {
-            mRecorder.stop();
-            mRecorder.release();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mRecorder = null;*/
-
-        //codigo para llamar al ServicioGrabacion
-        /*Intent migrabacion = new Intent(getApplicationContext(), ServicioGrabacion.class);
-        getApplicationContext().stopService(migrabacion);*/
-
-        mService.stopRecording();
-        //detener el cronometro
-        chronometer.stop();
-        chronometer.setBase(SystemClock.elapsedRealtime());
-    }
 
     private void startPlaying() {
         mPlayer = new MediaPlayer();
@@ -408,6 +372,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+    //********************************
+    // FUNCIONES DE REPRODUCCION
+    //********************************
+
+
+
+
 
     Runnable runnable = new Runnable() {
         @Override
@@ -477,47 +448,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //***************************
     // NOTIFICACIONES
     //***************************
-    private void setPendingIntent(){
-        Intent intent = new Intent(this, MainActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        //stackBuilder.addParentStack();
-        stackBuilder.addNextIntent(intent);
-        pendindIntent = stackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private void createNotification(String mensaje){
+    public void crearNotificacion(String mensaje){
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "Notificacion";
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(notificationChannel);
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
+
+            CharSequence name = "Texto de CharSenquence name";
+            String description = "Texto de String descripcion";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel mChannel = new NotificationChannel(channelId, name, importance);
+
+            mChannel.setDescription(description);
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            //mChannel.enableVibration(true);
+            //mChannel.setVibrationPattern(new long[]{100,200,300,400,500,400,300,200,400});
+
+            mNotificationManager.createNotificationChannel(mChannel);
+            notificacion = new NotificationCompat.Builder(this, channelId);
+
+            notificacion.setSmallIcon(R.drawable.ic_keyboard_voice_black_24dp);
+            notificacion.setTicker(".:AUR:.  " + mensaje);
+            //notificacion.setContentTitle("AUR Audio Recorder");
+            notificacion.setContentText(mensaje);
+
+            //*****************************
+            //*****************************
+            Intent intent = getIntent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            notificacion.setContentIntent(pendingIntent);
+            //*****************************
+            //*****************************
+
+            mNotificationManager.notify(1, notificacion.build());
+
+        }else {
+
+            notificacion = new NotificationCompat.Builder(this, "miNotificacion");
+            notificacion.setAutoCancel(true);
+            notificacion.setSmallIcon(R.drawable.ic_keyboard_voice_black_24dp);
+            notificacion.setPriority(Notification.PRIORITY_HIGH);
+            notificacion.setTicker(".:AUR:.  " + mensaje);
+            notificacion.setContentTitle("AUR Audio Recorder");
+            notificacion.setContentText(mensaje);
+            notificacion.setAutoCancel(false);
+
+            Intent intentNotificacion = getIntent();
+            intentNotificacion.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            PendingIntent pendingIntentNotificacion = PendingIntent.getActivity(MainActivity.this, 0, intentNotificacion, PendingIntent.FLAG_UPDATE_CURRENT);
+            notificacion.setContentIntent(pendingIntentNotificacion);
+
+            NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            nm.notify(idUnica, notificacion.build());
+
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
 
-        //definir el icono
-        builder.setSmallIcon(R.drawable.ic_keyboard_voice_black_24dp);
-
-        builder.setContentTitle("AUR Audio Recorder");
-        builder.setContentText(mensaje);
-
-        builder.setColor(Color.RED);
-
-        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        builder.setLights(Color.WHITE, 1000, 1000);
-        //builder.setVibrate(new long[]{1000,1000,1000,1000,1000});
-        //builder.setDefaults(Notification.DEFAULT_SOUND);
-
-        builder.setContentIntent(pendindIntent);
-
-        //Acciones desde la notificacion
-        //builder.addAction(R.drawable.ic_stop_white_24dp, "STOP recording", stopRecording());
-
-
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getApplicationContext());
-        notificationManagerCompat.notify(NOTIFICACION_ID, builder.build());
 
     }
 
