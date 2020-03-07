@@ -268,11 +268,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         } else if (view == imageViewPlay) {
             if (!isPlaying && fileName != null) {
-
+                isPlaying = true;
                 startPlaying();
 
             } else {
-
+                isPlaying = false;
                 stopPlaying();
 
 
