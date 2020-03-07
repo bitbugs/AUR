@@ -23,11 +23,11 @@
         android:id="@+id/textViewNoRecordings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No se encontraron grabaciones."
-        android:visibility="gone"
         android:layout_centerInParent="true"
-        android:textColor="@android:color/darker_gray"
-        />
+        android:lineSpacingExtra="10sp"
+        android:text="@string/no_se_encontraron_grabaciones"
+        android:textColor="@color/colorSecondary"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

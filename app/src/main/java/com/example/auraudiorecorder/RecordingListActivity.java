@@ -70,8 +70,8 @@ public class RecordingListActivity extends AppCompatActivity {
 
         //establecer la toolbar
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Recording List");
-        toolbar.setTitleTextColor(getResources().getColor(android.R.color.black));
+        toolbar.setTitle(R.string.lista_grabaciones_title);
+        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         setSupportActionBar(toolbar);
 
         //habilitar el boton de VOLVER

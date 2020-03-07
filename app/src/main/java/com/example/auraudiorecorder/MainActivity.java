@@ -9,14 +9,17 @@ import android.app.TaskStackBuilder;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+
+import android.content.SharedPreferences;
+
 import android.content.ServiceConnection;
+
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -39,6 +42,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -188,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //establecer la toolbar
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("AUR audio recorder");
-        toolbar.setTitleTextColor(getResources().getColor(android.R.color.black));
+        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         setSupportActionBar(toolbar);
 
         linearLayoutRecorder = findViewById(R.id.linearLayoutRecorder);
@@ -209,15 +213,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.list_menu,menu);
+        inflater.inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.item_list:
+            case R.id.actionLista:
                 gotoRecodingListActivity();
+                return true;
+            case R.id.actionPreferencias:
+                lanzarPreferenciasActivity(null);
+                return true;
+            case R.id.actionTips:
+                lanzarTipsActivity(null);
+                return true;
+            case R.id.actionAcercaDe:
+                lanzarAcercaDeAction(null);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -231,9 +244,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    private void lanzarPreferenciasActivity(View view) {
+        Intent intent = new Intent(this, PreferenciasActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    public void mostrarPreferencias(View view) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String s = "tema oscuro: " + pref.getBoolean("temaOscuro", false)
+                + ", formato de archivo: " + pref.getString("formatoGrabacion", "?")
+                + ", muestreo de la grabacion: " + pref.getString("muestreoGrabacion", "?");
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    private void lanzarTipsActivity(View view) {
+        Intent intent = new Intent(this, TipsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void lanzarAcercaDeAction(View view) {
+        Intent intent = new Intent(this, AcercaDeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+
+
+
     //**************************
     // MANEJADOR DELOS CLICKS
     //**************************
+
     @Override
     public void onClick(View view) {
 
@@ -402,7 +445,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void getPermissionToRecordAudio() {
         /* 1) Usar la version de la libreria de soporte ContextCompat.checkSelfPermission para evitar tener que verificar
         * la version build ya que Context.checkSelfPermission solo esta disponible en Marshmallow.
-        * 2) Siempre hay que verificar los permisos, aunque ya hayan sido concecidos, ya que el usuario puede revocarlos
+        * 2) Siempre hay que verificar los permisos, aunque ya hayan sido concedidos, ya que el usuario puede revocarlos
         * despues de haberlos otorgado.*/
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED

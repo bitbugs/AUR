@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,7 +11,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
+        android:background="@color/colorPrimary"
+        app:titleTextColor="@color/blanco" />
 
     <LinearLayout
         android:id="@+id/linearLayoutRecorder"
@@ -26,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="60sp"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/colorPrimaryLight"
             android:layout_gravity="center_horizontal"
             />
 
@@ -44,13 +46,13 @@
                 android:id="@+id/imageViewPlay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_play"
                 android:layout_gravity="center_vertical"
-                android:clickable="true"
-                android:tint="@android:color/darker_gray"
-                android:focusable="true"
                 android:background="?android:attr/selectableItemBackground"
-                />
+                android:clickable="true"
+                android:contentDescription="@string/reproducir"
+                android:focusable="true"
+                android:src="@drawable/ic_play"
+                android:tint="@color/colorPrimaryDark" />
             <SeekBar
                 android:id="@+id/seekBar"
                 android:layout_width="match_parent"
@@ -77,25 +79,25 @@
                 android:id="@+id/imageViewRecord"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_microphone"
-                android:background="?android:attr/selectableItemBackground"
                 android:layout_marginEnd="10dp"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
+                android:contentDescription="@string/grabar"
                 android:focusable="true"
-                />
+                android:src="@drawable/ic_microphone" />
 
             <ImageView
                 android:id="@+id/imageViewStop"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:src="@drawable/ic_stop"
-                android:tint="@android:color/darker_gray"
-                android:background="?android:attr/selectableItemBackground"
                 android:layout_gravity="center_vertical"
-                android:visibility="gone"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
+                android:contentDescription="@string/detener"
                 android:focusable="true"
-                />
+                android:src="@drawable/ic_stop"
+                android:tint="@color/colorPrimaryDark"
+                android:visibility="gone" />
 
         </LinearLayout>
 

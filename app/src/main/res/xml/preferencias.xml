@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+   <PreferenceCategory
+       android:key="apariencia_category"
+       android:title="Apariencia">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="temaOscuro"
+            android:summary="Cambiar la apariencia de la app a tema oscuro."
+            android:title="Tema oscuro" />
+   </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="opcionesGrabacion_category"
+        android:title="Opciones de grabacion">
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/formatosGrabacion"
+            android:entryValues="@array/formatosGrabacionValores"
+            android:key="formatoGrabacion"
+            android:summary="Elegir el formato de archivo de la grabación."
+            android:title="Formato de archivo" />
+        <ListPreference
+            android:defaultValue="4"
+            android:entries="@array/muestreoGrabacion"
+            android:entryValues="@array/muestreoGrabacionValores"
+            android:key="muestreoGrabacion"
+            android:summary="Elegir la tasa de muestreo para la grabación."
+            android:title="Tasa de muestreo" />
+    </PreferenceCategory>
+</PreferenceScreen>

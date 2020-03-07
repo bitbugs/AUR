@@ -3,10 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@android:color/darker_gray</item>
-        <item name="colorAccent">@android:color/holo_red_light</item>
-        <item name="android:actionMenuTextColor">@android:color/holo_red_light</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorSecondary</item>
+        <item name="android:textColorPrimaryInverse">@color/blanco</item>
+<!--        <item name="android:actionMenuTextColor">@color/colorSecondaryLight</item>-->
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
     </style>
 
