@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/actionRenombrar"
+        android:orderInCategory="5"
+        android:title="@string/renombrar"
+        app:showAsAction="never|withText">
+    </item>
+
+    <item
+        android:id="@+id/actionCompartir"
+        android:orderInCategory="10"
+        android:title="@string/compartir"
+        app:showAsAction="never|withText">
+    </item>
+
+    <item
+        android:id="@+id/actionEliminar"
+        android:orderInCategory="15"
+        android:title="@string/eliminar"
+        app:showAsAction="never|withText">
+    </item>
+
+    <item
+        android:id="@+id/actionAdjuntarNota"
+        android:orderInCategory="20"
+        android:title="@string/adjuntar_note"
+        app:showAsAction="never|withText">
+    </item>
+
+    <item
+        android:id="@+id/actionEtiquetar"
+        android:orderInCategory="25"
+        android:title="@string/etiquetar"
+        app:showAsAction="never|withText">
+    </item>
+
+</menu>
