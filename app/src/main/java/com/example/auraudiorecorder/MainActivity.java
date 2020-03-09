@@ -198,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         linearLayoutRecorder = findViewById(R.id.linearLayoutRecorder);
         chronometer = findViewById(R.id.chronometerTimer);
         chronometer.setBase(SystemClock.elapsedRealtime());
+
         imageViewRecord = findViewById(R.id.imageViewRecord);
         imageViewStop = findViewById(R.id.imageViewStop);
         imageViewPlay = findViewById(R.id.imageViewPlay);
@@ -360,6 +361,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //mostrar el boton PLAY
         imageViewPlay.setImageResource(R.drawable.ic_play);
         chronometer.stop();
+
     }
 
 
@@ -390,6 +392,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 imageViewPlay.setImageResource(R.drawable.ic_play);
                 isPlaying = false;
                 chronometer.stop();
+
+                //***************************
+                // Seekbar vuvlve a cero
+                //***************************
+                //Toast.makeText(getApplicationContext(), "El audio llego al final", Toast.LENGTH_SHORT).show();
+                //Log.d("estado", "El audio llego al final");
+                mPlayer.seekTo(0);
+                seekBar.setProgress(0);
+                //chronometer.stop();
+                //chronometer.setBase(0);
+                //***************************
+                // Seekbar vuvlve a cero
+                //***************************
             }
         });
 
@@ -437,6 +452,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             seekBar.setProgress(mCurrentPosition);
             lastProgress = mCurrentPosition;
         }
+
         mHandler.postDelayed(runnable, 100);
     }
 
