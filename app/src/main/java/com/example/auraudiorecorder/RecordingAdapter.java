@@ -6,9 +6,14 @@ import android.os.Handler;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -17,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class RecordingAdapter  extends RecyclerView.Adapter<RecordingAdapter.ViewHolder>{
+public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.ViewHolder>{
 
     private Context context;
     private ArrayList<Recording> recordingArrayList;
@@ -30,6 +35,7 @@ public class RecordingAdapter  extends RecyclerView.Adapter<RecordingAdapter.Vie
         this.recordingArrayList = recordingArrayList;
     }
 
+    //verificar comportamiento play-pause
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.recording_item_layout, parent, false);
@@ -41,10 +47,49 @@ public class RecordingAdapter  extends RecyclerView.Adapter<RecordingAdapter.Vie
         setUpData(holder,position);
     }
 
-    private void setUpData(ViewHolder holder, int position) {
+    private void setUpData(final ViewHolder holder, int position) {
         Recording recording = recordingArrayList.get(position);
         holder.textViewName.setText(recording.getFileName());
 
+        holder.botonMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //crear el menú popup
+                PopupMenu popup = new PopupMenu(context, holder.botonMore);
+
+                //inflarlo desde el recurso xml
+                popup.inflate(R.menu.menu_recording_item);
+
+                //agregar el escuchador
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.actionRenombrar:
+                                //manejar el clic sobre Renombrar
+                                break;
+                            case R.id.actionCompartir:
+                                //manejar el clic sobre Renombrar
+                                break;
+                            case R.id.actionEliminar:
+                                //manejar el clic sobre Eliminar
+                                break;
+                            case R.id.actionAdjuntarNota:
+                                //manejar el clic sobre Adjuntar nota
+                                break;
+                            case R.id.actionEtiquetar:
+                                //manejar el clic sobre Etiquetar
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                //mostrar el menú popup
+                popup.show();
+            }
+        });
+
+        //manejar los cambios de icono entre play y pause
         if (recording.isPlaying()) {
             holder.imageViewPlay.setImageResource(R.drawable.ic_pause);
             android.transition.TransitionManager.beginDelayedTransition((ViewGroup) holder.itemView);
@@ -68,6 +113,7 @@ public class RecordingAdapter  extends RecyclerView.Adapter<RecordingAdapter.Vie
         ImageView imageViewPlay;
         SeekBar seekBar;
         TextView textViewName;
+        ImageButton botonMore;
         private String recordingUri;
         private int lastProgress = 0;
         private Handler mHandler = new Handler();
@@ -79,6 +125,7 @@ public class RecordingAdapter  extends RecyclerView.Adapter<RecordingAdapter.Vie
             imageViewPlay = itemView.findViewById(R.id.imageViewPlay);
             seekBar = itemView.findViewById(R.id.seekBar);
             textViewName = itemView.findViewById(R.id.textViewRecordingname);
+            botonMore = itemView.findViewById(R.id.botonMore);
 
             imageViewPlay.setOnClickListener(new View.OnClickListener() {
                 @Override

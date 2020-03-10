@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/blanco"
     tools:context=".RecordingListActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -12,12 +12,33 @@
         android:layout_height="wrap_content"
         />
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/listaTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabTodas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/todas" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabCategorias"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/categorias" />
+    </com.google.android.material.tabs.TabLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewRecordings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        />
+        android:layout_below="@+id/listaTabs"
+        >
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <TextView
         android:id="@+id/textViewNoRecordings"
@@ -26,7 +47,7 @@
         android:layout_centerInParent="true"
         android:lineSpacingExtra="10sp"
         android:text="@string/no_se_encontraron_grabaciones"
-        android:textColor="@color/colorSecondary"
+        android:textColor="@color/colorAccent"
         android:visibility="gone" />
 
 

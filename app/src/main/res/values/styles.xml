@@ -5,10 +5,20 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorSecondary</item>
-        <item name="android:textColorPrimaryInverse">@color/blanco</item>
-<!--        <item name="android:actionMenuTextColor">@color/colorSecondaryLight</item>-->
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorForeground">@color/grisTexto</item>
+        <item name="android:textColor">@color/grisTexto</item>
+        <item name="actionMenuTextColor">@color/grisTexto</item>
+        <item name="titleTextColor">@color/grisTexto</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
+    </style>
+
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorForeground">@color/grisTexto</item>
+        <item name="android:textColor">@color/grisTexto</item>
+        <item name="actionMenuTextColor">@color/grisTexto</item>
+        <item name="titleTextColor">@color/grisTexto</item>
     </style>
 
 </resources>
