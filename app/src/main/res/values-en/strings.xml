@@ -10,6 +10,7 @@
     <string name="title_activity_tips">TipsActivity</string>
     <string name="no_se_encontraron_grabaciones">No records where found.</string>
     <string name="reproducir">play</string>
+    <string name="pausar">pause</string>
     <string name="grabar">record</string>
     <string name="detener">stop</string>
     <string name="lista_grabaciones_title">Recordings List</string>

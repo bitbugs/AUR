@@ -55,13 +55,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Toolbar toolbar;
     private Chronometer chronometer;
-    private ImageView imageViewRecord, imageViewPlay, imageViewStop;
+    private ImageView imageViewRecord, imageViewPlay, imageViewStop, imageViewPause;
     private SeekBar seekBar;
     private LinearLayout linearLayoutRecorder, linearLayoutPlay;
     private MediaRecorder mRecorder;
     private MediaPlayer mPlayer;
     private String fileName = null;
     private int lastProgress = 0;
+    private long pauseProgress;
     private Handler mHandler = new Handler();
     private int RECORD_AUDIO_REQUEST_CODE =123 ;
     private boolean isPlaying = false;
@@ -202,12 +203,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageViewRecord = findViewById(R.id.imageViewRecord);
         imageViewStop = findViewById(R.id.imageViewStop);
         imageViewPlay = findViewById(R.id.imageViewPlay);
+        imageViewPause = findViewById(R.id.imageViewPause);
         linearLayoutPlay = findViewById(R.id.linearLayoutPlay);
         seekBar = findViewById(R.id.seekBar);
 
         imageViewRecord.setOnClickListener(this);
         imageViewStop.setOnClickListener(this);
         imageViewPlay.setOnClickListener(this);
+        imageViewPause.setOnClickListener(this);
 
     }
 
@@ -284,16 +287,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (view == imageViewRecord) {
             prepareForRecording();
 
+            //comenzar el cronometro
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+
             mService.startRecording();
 
             lastProgress = 0;
             seekBar.setProgress(0);
             stopPlaying();
             //el imageview cambia al boton de STOP
-
-            //comenzar el cronometro
-            chronometer.setBase(SystemClock.elapsedRealtime());
-            chronometer.start();
 
             //Crea una notificacion en la barra de estado de android
             crearNotificacion("Grabando...");
@@ -306,23 +309,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //detener el cronometro
             chronometer.stop();
-            chronometer.setBase(SystemClock.elapsedRealtime());
+            //chronometer.setBase(SystemClock.elapsedRealtime());
 
             //Crea una notificacion en la barra de estado de android
             crearNotificacion("Grabacion detenida.");
 
         } else if (view == imageViewPlay) {
-            if (!isPlaying && fileName != null) {
-                isPlaying = true;
+            if(pauseProgress != 0){
+                try {
+                    chronometer.setBase(SystemClock.elapsedRealtime() - pauseProgress);
+                    chronometer.start();
+                    mPlayer.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }else if (!isPlaying && fileName != null) {
+
+                //mia
+                chronometer.setBase(SystemClock.elapsedRealtime());
+                pauseProgress = 0;
+                //mia
+
                 startPlaying();
-
-            } else {
-                isPlaying = false;
-                stopPlaying();
-
-
+                chronometer.start();
+                mPlayer.start();
             }
+
+            isPlaying = true;
+
+            imageViewPause.setVisibility(View.VISIBLE);
+            imageViewPlay.setVisibility(View.GONE);
+
+        }else if (view == imageViewPause) {
+            Toast.makeText(this, "se apreto el boton de pause!!!", Toast.LENGTH_LONG).show();
+            //Log.d("metodo", "El MainActivity ejecuto onRestart() y el estado del servicio es: " + estado);
+            if (isPlaying) {
+                isPlaying = false;
+
+                //stopPlaying();
+                pauseProgress = SystemClock.elapsedRealtime() - chronometer.getBase();
+                mPlayer.pause();
+                chronometer.stop();
+
+
+                imageViewPlay.setVisibility(View.VISIBLE);
+                imageViewPause.setVisibility(View.GONE);
+            }
+
         }
+
     }
     //**************************
     // MANEJADOR DELOS CLICKS
@@ -357,10 +393,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
         mPlayer = null;
+        pauseProgress = 0;
 
         //mostrar el boton PLAY
-        imageViewPlay.setImageResource(R.drawable.ic_play);
-        chronometer.stop();
+        //imageViewPlay.setImageResource(R.drawable.ic_play);
+        //chronometer.stop();
 
     }
 
@@ -371,27 +408,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             mPlayer.setDataSource(fileName);
             mPlayer.prepare();
-            mPlayer.start();
+            //mPlayer.start();
         } catch (IOException e) {
             Log.e("LOG_TAG", "prepare() failed");
         }
 
         //mostrar el boton PAUSA en el imageview
-        imageViewPlay.setImageResource(R.drawable.ic_pause);
+        //imageViewPlay.setImageResource(R.drawable.ic_pause);
 
         seekBar.setProgress(lastProgress);
         mPlayer.seekTo(lastProgress);
         seekBar.setMax(mPlayer.getDuration());
         seekUpdate();
-        chronometer.start();
+        //mia
+        //chronometer.setBase(SystemClock.elapsedRealtime());
+        //mia
+        //chronometer.start();
 
 
         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                imageViewPlay.setImageResource(R.drawable.ic_play);
+                //imageViewPlay.setImageResource(R.drawable.ic_play);
+                imageViewPlay.setVisibility(View.VISIBLE);
+                imageViewPause.setVisibility(View.GONE);
                 isPlaying = false;
                 chronometer.stop();
+                //mia
+                //chronometer.setBase(SystemClock.elapsedRealtime());
+                pauseProgress = 0;
+                //mia
 
                 //***************************
                 // Seekbar vuvlve a cero
@@ -400,8 +446,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //Log.d("estado", "El audio llego al final");
                 mPlayer.seekTo(0);
                 seekBar.setProgress(0);
-                //chronometer.stop();
-                //chronometer.setBase(0);
                 //***************************
                 // Seekbar vuvlve a cero
                 //***************************
@@ -415,7 +459,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (mPlayer != null && fromUser) {
                     mPlayer.seekTo(progress);
-                    chronometer.setBase(SystemClock.elapsedRealtime() - mPlayer.getCurrentPosition());
+                    //chronometer.setBase(SystemClock.elapsedRealtime() - mPlayer.getCurrentPosition());
+                    chronometer.setBase(SystemClock.elapsedRealtime() - progress);
                     lastProgress = progress;
                 }
             }
