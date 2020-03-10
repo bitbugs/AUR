@@ -179,16 +179,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //*************************************
 
 
-
     @Override
     protected void onSaveInstanceState(Bundle estado){
         super.onSaveInstanceState(estado);
     }
 
-
-
-
+    //*************************************
     //metodo para inicializar las vistas
+    //*************************************
     private void initViews() {
         //establecer la toolbar
         toolbar = findViewById(R.id.toolbar);
@@ -212,7 +210,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageViewPlay.setOnClickListener(this);
         imageViewPause.setOnClickListener(this);
 
+        //**************************
+        // DINAMICA DE LA SEEKBAR
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (mPlayer != null && fromUser) {
+                    mPlayer.seekTo(progress);
+                    //chronometer.setBase(SystemClock.elapsedRealtime() - mPlayer.getCurrentPosition());
+                    chronometer.setBase(SystemClock.elapsedRealtime() - progress);
+                    lastProgress = progress;
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        // DINAMICA DE LA SEEKBAR
+        //**************************
+
     }
+    //*************************************
+    //metodo para inicializar las vistas
+    //*************************************
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -277,10 +301,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
     //**************************
     // MANEJADOR DELOS CLICKS
     //**************************
-
     @Override
     public void onClick(View view) {
 
@@ -314,44 +338,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Crea una notificacion en la barra de estado de android
             crearNotificacion("Grabacion detenida.");
 
+            inicializaAudio();
+
         } else if (view == imageViewPlay) {
-            if(pauseProgress != 0){
+            Toast.makeText(this, "Play", Toast.LENGTH_SHORT).show();
+
+            if (!isPlaying && mPlayer!=null) {
+
+                chronometer.setBase(SystemClock.elapsedRealtime() - pauseProgress);
+                chronometer.start();
+                seekBar.setProgress(lastProgress);
+                mPlayer.seekTo(lastProgress);
+
                 try {
-                    chronometer.setBase(SystemClock.elapsedRealtime() - pauseProgress);
-                    chronometer.start();
                     mPlayer.start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-            }else if (!isPlaying && fileName != null) {
+                seekUpdate();
 
-                //mia
-                chronometer.setBase(SystemClock.elapsedRealtime());
-                pauseProgress = 0;
-                //mia
-
-                startPlaying();
-                chronometer.start();
-                mPlayer.start();
+                isPlaying = true;
+                imageViewPause.setVisibility(View.VISIBLE);
+                imageViewPlay.setVisibility(View.GONE);
             }
 
-            isPlaying = true;
-
-            imageViewPause.setVisibility(View.VISIBLE);
-            imageViewPlay.setVisibility(View.GONE);
-
         }else if (view == imageViewPause) {
-            Toast.makeText(this, "se apreto el boton de pause!!!", Toast.LENGTH_LONG).show();
-            //Log.d("metodo", "El MainActivity ejecuto onRestart() y el estado del servicio es: " + estado);
-            if (isPlaying) {
-                isPlaying = false;
+            Toast.makeText(this, "Pause", Toast.LENGTH_SHORT).show();
 
-                //stopPlaying();
-                pauseProgress = SystemClock.elapsedRealtime() - chronometer.getBase();
+            if (isPlaying) {
+
                 mPlayer.pause();
                 chronometer.stop();
 
+                //pauseProgress = SystemClock.elapsedRealtime() - chronometer.getBase();
+                lastProgress = (int) SystemClock.elapsedRealtime() - mPlayer.getCurrentPosition();
+                pauseProgress = lastProgress;
+
+                isPlaying = false;
 
                 imageViewPlay.setVisibility(View.VISIBLE);
                 imageViewPause.setVisibility(View.GONE);
@@ -365,8 +389,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //**************************
 
 
+    //*****************************************
+    // INICIALIZACION DEL AUDIO A REPRODUCIR
+    //*****************************************
+    private void inicializaAudio(){
 
-    //los metodos prepareFor se aseguran que se vean los iconos adecuados, y maneja la transicion entre ellos
+        try {
+            if(mPlayer != null){
+                mPlayer.release();
+                mPlayer = null;
+            }
+
+            mPlayer = new MediaPlayer();
+            mPlayer.setDataSource(fileName);
+            mPlayer.prepare();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("LOG_TAG", "Algo fallo al inicializar el audio.");
+        }
+        pauseProgress = 0;
+        lastProgress = 0;
+
+        //mPlayer.seekTo(lastProgress);
+        seekBar.setMax(mPlayer.getDuration());
+        //seekBar.setProgress(lastProgress);
+        //seekUpdate();
+
+
+        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                imageViewPlay.setVisibility(View.VISIBLE);
+                imageViewPause.setVisibility(View.GONE);
+                isPlaying = false;
+                chronometer.stop();
+
+                pauseProgress = 0;
+
+                mPlayer.seekTo(0);
+                seekBar.setProgress(0);
+
+            }
+        });
+
+
+
+    }
+    //*****************************************
+    // INICIALIZACION DEL AUDIO A REPRODUCIR
+    //*****************************************
+
+
+
+
+
+    //*******************************************************
+    // metodos para manejar la transicion entre los iconos
     private void prepareForStop() {
         TransitionManager.beginDelayedTransition(linearLayoutRecorder);
         imageViewRecord.setVisibility(View.VISIBLE);
@@ -380,6 +458,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageViewStop.setVisibility(View.VISIBLE);
         linearLayoutPlay.setVisibility(View.GONE);
     }
+    // metodos para manejar la transicion entre los iconos
+    //*******************************************************
 
 
 
@@ -388,6 +468,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //********************************
     private void stopPlaying() {
         try {
+            mPlayer.stop();
             mPlayer.release();
         } catch (Exception e) {
             e.printStackTrace();
@@ -395,87 +476,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPlayer = null;
         pauseProgress = 0;
 
-        //mostrar el boton PLAY
-        //imageViewPlay.setImageResource(R.drawable.ic_play);
-        //chronometer.stop();
-
     }
 
 
 
     private void startPlaying() {
-        mPlayer = new MediaPlayer();
-        try {
-            mPlayer.setDataSource(fileName);
-            mPlayer.prepare();
-            //mPlayer.start();
-        } catch (IOException e) {
-            Log.e("LOG_TAG", "prepare() failed");
-        }
 
-        //mostrar el boton PAUSA en el imageview
-        //imageViewPlay.setImageResource(R.drawable.ic_pause);
+        mPlayer.start();
 
         seekBar.setProgress(lastProgress);
         mPlayer.seekTo(lastProgress);
-        seekBar.setMax(mPlayer.getDuration());
         seekUpdate();
-        //mia
-        //chronometer.setBase(SystemClock.elapsedRealtime());
-        //mia
-        //chronometer.start();
 
-
-        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                //imageViewPlay.setImageResource(R.drawable.ic_play);
-                imageViewPlay.setVisibility(View.VISIBLE);
-                imageViewPause.setVisibility(View.GONE);
-                isPlaying = false;
-                chronometer.stop();
-                //mia
-                //chronometer.setBase(SystemClock.elapsedRealtime());
-                pauseProgress = 0;
-                //mia
-
-                //***************************
-                // Seekbar vuvlve a cero
-                //***************************
-                //Toast.makeText(getApplicationContext(), "El audio llego al final", Toast.LENGTH_SHORT).show();
-                //Log.d("estado", "El audio llego al final");
-                mPlayer.seekTo(0);
-                seekBar.setProgress(0);
-                //***************************
-                // Seekbar vuvlve a cero
-                //***************************
-            }
-        });
-
-
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (mPlayer != null && fromUser) {
-                    mPlayer.seekTo(progress);
-                    //chronometer.setBase(SystemClock.elapsedRealtime() - mPlayer.getCurrentPosition());
-                    chronometer.setBase(SystemClock.elapsedRealtime() - progress);
-                    lastProgress = progress;
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
     }
+
+
+
+
     //********************************
     // FUNCIONES DE REPRODUCCION
     //********************************
