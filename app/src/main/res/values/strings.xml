@@ -11,4 +11,23 @@
     <string name="grabar">grabar</string>
     <string name="detener">detener</string>
     <string name="lista_grabaciones_title">Lista de grabaciones</string>
+    <string name="apariencia">Apariencia</string>
+    <string name="opciones_de_grabacion">Opciones de grabacion</string>
+    <string name="tema_oscuro">Tema oscuro</string>
+    <string name="tema_oscuro_summary">Cambiar la apariencia de la app a tema oscuro.</string>
+    <string name="formato_archivo">Formato de archivo</string>
+    <string name="formato_archivo_summary">Elegir el formato de archivo de la grabación.</string>
+    <string name="tasa_muestreo">Tasa de muestreo</string>
+    <string name="tasa_muestreo_summary">Elegir la tasa de muestreo para la grabación.</string>
+    <string name="todas">Todas</string>
+    <string name="categorias">Categorías</string>
+    <string name="renombrar">Renombrar</string>
+    <string name="compartir">Compartir</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="adjuntar_note">Adjuntar Note</string>
+    <string name="etiquetar">Etiquetar</string>
+    <string name="mas_opciones">Mas opciones</string>
+    <string name="grabacion_guardada">La grabación fue guardada con éxito.</string>
+    <string name="permisos_concedidos">Se concedieron los permisos a AUR audio recorder.</string>
+    <string name="explicar_permisos">AUR audio recorder no puede funcionar sin los permisos solicitados. Saliendo de la aplicación.</string>
 </resources>

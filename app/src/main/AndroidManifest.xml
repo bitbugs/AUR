@@ -29,20 +29,20 @@
         <activity
             android:name=".AcercaDeActivity"
             android:label="@string/acerca_de"
-            android:theme="@style/Theme.AppCompat.Light.Dialog">
+            android:theme="@style/AppTheme.Dialog">
         </activity>
 
 
         <activity
             android:name=".TipsActivity"
             android:label="@string/sugerencias"
-            android:theme="@style/Theme.AppCompat.Light.Dialog">
+            android:theme="@style/AppTheme.Dialog">
         </activity>
 
         <activity
             android:name=".PreferenciasActivity"
             android:label="@string/preferencias"
-            android:theme="@style/Theme.AppCompat.Light.Dialog">
+            android:theme="@style/AppTheme.Dialog">
         </activity>
 
         <activity
