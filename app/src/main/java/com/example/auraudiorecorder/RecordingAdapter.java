@@ -35,6 +35,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
         this.recordingArrayList = recordingArrayList;
     }
 
+    //verificar comportamiento play-pause
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.recording_item_layout, parent, false);
