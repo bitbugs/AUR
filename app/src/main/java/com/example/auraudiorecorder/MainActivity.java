@@ -364,26 +364,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-        fileName = root.getAbsolutePath() + "/AUR/Audios/" + nombre_por_defecto() + ".mp3";
-        Log.d("filename", fileName);
-        mRecorder.setOutputFile(fileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
-        try {
-            mRecorder.prepare();
-            mRecorder.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        lastProgress = 0;
-        seekBar.setProgress(0);
-        stopPlaying();
-        //el imageview cambia al boton de STOP
-        //comenzar el cronometro
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        chronometer.start();
-    }
 
 
     private void stopRecording() {
