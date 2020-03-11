@@ -6,8 +6,10 @@
     <string name="lista">Lista</string>
     <string name="acercaDeText">Desarrollado por bitbugs, en el marco del proyecto de 2do año del programa BIT. bitbugs está conformado por Jorge Arcelus, Rafael Burgueño y Soledad Echinope.</string>
     <string name="tipsText">En esta ventana se ven diferentes sugerencias de uso de la aplicación, para que los usuarios puedan aprovechar mejor las capacidades de la app.</string>
+    <string name="title_activity_tips">TipsActivity</string>
     <string name="no_se_encontraron_grabaciones">No se encontraron grabaciones.</string>
     <string name="reproducir">reproducir</string>
+    <string name="pausar">pausar</string>
     <string name="grabar">grabar</string>
     <string name="detener">detener</string>
     <string name="lista_grabaciones_title">Lista de grabaciones</string>

@@ -55,13 +55,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Toolbar toolbar;
     private Chronometer chronometer;
-    private ImageView imageViewRecord, imageViewPlay, imageViewStop;
+    private ImageView imageViewRecord, imageViewPlay, imageViewStop, imageViewPause;
     private SeekBar seekBar;
     private LinearLayout linearLayoutRecorder, linearLayoutPlay;
     private MediaRecorder mRecorder;
     private MediaPlayer mPlayer;
     private String fileName = null;
     private int lastProgress = 0;
+    private long pauseProgress;
     private Handler mHandler = new Handler();
     private int RECORD_AUDIO_REQUEST_CODE =123 ;
     private boolean isPlaying = false;
@@ -69,8 +70,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ServicioGrabacion mService;
 
     Intent intentGrabacion;
-
-
 
     //***************************
     // NOTIFICACIONES
@@ -178,16 +177,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //*************************************
 
 
-
     @Override
     protected void onSaveInstanceState(Bundle estado){
         super.onSaveInstanceState(estado);
     }
 
-
-
-
+    //*************************************
     //metodo para inicializar las vistas
+    //*************************************
     private void initViews() {
         //establecer la toolbar
         toolbar = findViewById(R.id.toolbar);
@@ -198,17 +195,58 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         linearLayoutRecorder = findViewById(R.id.linearLayoutRecorder);
         chronometer = findViewById(R.id.chronometerTimer);
         chronometer.setBase(SystemClock.elapsedRealtime());
+
         imageViewRecord = findViewById(R.id.imageViewRecord);
         imageViewStop = findViewById(R.id.imageViewStop);
         imageViewPlay = findViewById(R.id.imageViewPlay);
+        imageViewPause = findViewById(R.id.imageViewPause);
         linearLayoutPlay = findViewById(R.id.linearLayoutPlay);
         seekBar = findViewById(R.id.seekBar);
 
         imageViewRecord.setOnClickListener(this);
         imageViewStop.setOnClickListener(this);
         imageViewPlay.setOnClickListener(this);
+        imageViewPause.setOnClickListener(this);
+
+        //**************************
+        // DINAMICA DE LA SEEKBAR
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (mPlayer != null && fromUser) {
+                    lastProgress = (progress / 1000) * 1000;
+                    pauseProgress = (long) lastProgress;
+
+                    if (isPlaying) {
+                        chronometer.stop();
+                        mPlayer.pause();
+                    }
+
+                    chronometer.setBase(SystemClock.elapsedRealtime() - pauseProgress);
+                    mPlayer.seekTo(lastProgress);
+
+                    if (isPlaying) {
+                        chronometer.start();
+                        mPlayer.start();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+        // DINAMICA DE LA SEEKBAR
+        //**************************
 
     }
+    //*************************************
+    //metodo para inicializar las vistas
+    //*************************************
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -273,15 +311,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
     //**************************
     // MANEJADOR DELOS CLICKS
     //**************************
-
     @Override
     public void onClick(View view) {
 
         if (view == imageViewRecord) {
             prepareForRecording();
+
+            //comenzar el cronometro
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
 
             mService.startRecording();
 
@@ -289,10 +331,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             seekBar.setProgress(0);
             stopPlaying();
             //el imageview cambia al boton de STOP
-
-            //comenzar el cronometro
-            chronometer.setBase(SystemClock.elapsedRealtime());
-            chronometer.start();
 
             //Crea una notificacion en la barra de estado de android
             crearNotificacion("Grabando...");
@@ -305,31 +343,126 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //detener el cronometro
             chronometer.stop();
-            chronometer.setBase(SystemClock.elapsedRealtime());
+            //chronometer.setBase(SystemClock.elapsedRealtime());
 
             //Crea una notificacion en la barra de estado de android
             crearNotificacion("Grabacion detenida.");
 
+            inicializaAudio();
+
         } else if (view == imageViewPlay) {
-            if (!isPlaying && fileName != null) {
+
+            if (!isPlaying && mPlayer!=null) {
+
+                lastProgress = (lastProgress / 1000) * 1000;
+                pauseProgress = (long) lastProgress;
+
+                //Toast.makeText(this, "Play: pauseProgress = "+pauseProgress+" y lastProgress = "+lastProgress, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Play", Toast.LENGTH_SHORT).show();
+
+                chronometer.setBase(SystemClock.elapsedRealtime() - pauseProgress);
+                chronometer.start();
+                seekBar.setProgress(lastProgress);
+                mPlayer.seekTo(lastProgress);
+
+                try {
+                    mPlayer.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 isPlaying = true;
-                startPlaying();
+                imageViewPause.setVisibility(View.VISIBLE);
+                imageViewPlay.setVisibility(View.GONE);
+            }
 
-            } else {
+        }else if (view == imageViewPause) {
+            if (isPlaying) {
+                chronometer.stop();
+                mPlayer.pause();
+
+                lastProgress = (int) (SystemClock.elapsedRealtime() - chronometer.getBase());
+                lastProgress = (lastProgress / 1000) * 1000;
+                pauseProgress = (long) lastProgress;
+
+                //Toast.makeText(this, "Pause: pauseProgress = "+pauseProgress+" y lastProgress = "+lastProgress, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Pause", Toast.LENGTH_SHORT).show();
+
                 isPlaying = false;
-                stopPlaying();
 
-
+                imageViewPlay.setVisibility(View.VISIBLE);
+                imageViewPause.setVisibility(View.GONE);
             }
         }
+
     }
     //**************************
     // MANEJADOR DELOS CLICKS
     //**************************
 
 
+    //*****************************************
+    // INICIALIZACION DEL AUDIO A REPRODUCIR
+    //*****************************************
+    private void inicializaAudio(){
+
+        try {
+            if(mPlayer != null){
+                mPlayer.release();
+                mPlayer = null;
+            }
+
+            mPlayer = new MediaPlayer();
+            mPlayer.setDataSource(fileName);
+            mPlayer.prepare();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("LOG_TAG", "Algo fallo al inicializar el audio.");
+        }
+        pauseProgress = 0;
+        lastProgress = 0;
+
+        isPlaying = false;
+
+        //mPlayer.seekTo(lastProgress);
+        seekBar.setMax(mPlayer.getDuration());
+        //seekBar.setProgress(lastProgress);
+        seekUpdate();
+
+
+        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                imageViewPlay.setVisibility(View.VISIBLE);
+                imageViewPause.setVisibility(View.GONE);
+                isPlaying = false;
+                chronometer.stop();
+
+                pauseProgress = 0;
+                lastProgress = 0;
+
+                mPlayer.seekTo(0);
+                seekBar.setProgress(0);
+
+            }
+        });
+
+
+
+    }
+    //*****************************************
+    // INICIALIZACION DEL AUDIO A REPRODUCIR
+    //*****************************************
+
+
+
+
+
+    //*******************************************************
+    // metodos para manejar la transicion entre los iconos
 
     //los metodos prepareFor se aseguran que se vean los iconos adecuados, y manejan la transicion entre ellos
+
     private void prepareForStop() {
         TransitionManager.beginDelayedTransition(linearLayoutRecorder);
         imageViewRecord.setVisibility(View.VISIBLE);
@@ -343,6 +476,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageViewStop.setVisibility(View.VISIBLE);
         linearLayoutPlay.setVisibility(View.GONE);
     }
+    // metodos para manejar la transicion entre los iconos
+    //*******************************************************
 
 
 
@@ -351,110 +486,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //********************************
     private void stopPlaying() {
         try {
+            mPlayer.stop();
             mPlayer.release();
         } catch (Exception e) {
             e.printStackTrace();
         }
         mPlayer = null;
-
-        //mostrar el boton PLAY
-        imageViewPlay.setImageResource(R.drawable.ic_play);
-        chronometer.stop();
+        pauseProgress = 0;
     }
 
-
-
-        fileName = root.getAbsolutePath() + "/AUR/Audios/" + nombre_por_defecto() + ".mp3";
-        Log.d("filename", fileName);
-        mRecorder.setOutputFile(fileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
-        try {
-            mRecorder.prepare();
-            mRecorder.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        lastProgress = 0;
-        seekBar.setProgress(0);
-        stopPlaying();
-        //el imageview cambia al boton de STOP
-        //comenzar el cronometro
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        chronometer.start();
-    }
-
-
-    private void stopRecording() {
-        try {
-            mRecorder.stop();
-            mRecorder.release();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mRecorder = null;
-
-        //detener el cronometro
-        chronometer.stop();
-        chronometer.setBase(SystemClock.elapsedRealtime());
-
-        //mostrar mensaje
-        Toast.makeText(this, R.string.grabacion_guardada, Toast.LENGTH_SHORT).show();
-    }
 
 
     private void startPlaying() {
-        mPlayer = new MediaPlayer();
-        try {
-            mPlayer.setDataSource(fileName);
-            mPlayer.prepare();
-            mPlayer.start();
-        } catch (IOException e) {
-            Log.e("LOG_TAG", "prepare() failed");
-        }
-
-        //mostrar el boton PAUSA en el imageview
-        imageViewPlay.setImageResource(R.drawable.ic_pause);
+        mPlayer.start();
 
         seekBar.setProgress(lastProgress);
         mPlayer.seekTo(lastProgress);
-        seekBar.setMax(mPlayer.getDuration());
         seekUpdate();
-        chronometer.start();
-
-
-        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                imageViewPlay.setImageResource(R.drawable.ic_play);
-                isPlaying = false;
-                chronometer.stop();
-            }
-        });
-
-
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (mPlayer != null && fromUser) {
-                    mPlayer.seekTo(progress);
-                    chronometer.setBase(SystemClock.elapsedRealtime() - mPlayer.getCurrentPosition());
-                    lastProgress = progress;
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
     }
     //********************************
     // FUNCIONES DE REPRODUCCION
@@ -477,6 +525,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             seekBar.setProgress(mCurrentPosition);
             lastProgress = mCurrentPosition;
         }
+
         mHandler.postDelayed(runnable, 100);
     }
 
