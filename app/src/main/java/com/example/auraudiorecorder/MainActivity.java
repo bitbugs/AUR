@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //establecer la toolbar
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("AUR audio recorder");
-        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         setSupportActionBar(toolbar);
 
         linearLayoutRecorder = findViewById(R.id.linearLayoutRecorder);
@@ -460,6 +460,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //*******************************************************
     // metodos para manejar la transicion entre los iconos
+
+    //los metodos prepareFor se aseguran que se vean los iconos adecuados, y manejan la transicion entre ellos
+
     private void prepareForStop() {
         TransitionManager.beginDelayedTransition(linearLayoutRecorder);
         imageViewRecord.setVisibility(View.VISIBLE);
@@ -491,6 +494,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPlayer = null;
         pauseProgress = 0;
     }
+
 
 
     private void startPlaying() {
@@ -560,10 +564,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED
                     && grantResults[2] == PackageManager.PERMISSION_GRANTED){
 
-                Toast.makeText(this, "Se concedieron los permisos a AUR audio recorder.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.permisos_concedidos, Toast.LENGTH_SHORT).show();
 
             } else {
-                Toast.makeText(this, "Debe otorgar los permisos solicitados para que AUR audio recorder pueda funcionar correctamente. Saliendo de la aplicación.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.explicar_permisos, Toast.LENGTH_SHORT).show();
                 finishAffinity();
             }
         }

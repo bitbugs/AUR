@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/blanco"
     android:orientation="vertical"
-    android:background="@android:color/white"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
     android:paddingStart="10dp"
-    >
+    android:paddingTop="10dp"
+    android:paddingEnd="10dp"
+    android:paddingBottom="10dp">
 
     <ImageView
         android:id="@+id/imageViewPlay"
@@ -19,40 +20,49 @@
         android:contentDescription="@string/reproducir"
         android:focusable="true"
         android:src="@drawable/ic_play"
-        android:tint="@android:color/darker_gray" />
+        android:tint="@color/colorPrimary" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_toEndOf="@+id/imageViewPlay"
         android:layout_marginStart="30dp"
-        >
+        android:layout_toEndOf="@+id/imageViewPlay"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textViewRecordingname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Grabacion 001"
-            android:textSize="18sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="16sp"
             android:textStyle="bold" />
+
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@android:color/darker_gray"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="20dp"
-            />
+            android:background="@color/colorPrimary" />
 
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/botonMore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center_vertical|end"
+        android:background="@color/blanco"
+        android:contentDescription="@string/mas_opciones"
+        app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
 
 </RelativeLayout>
