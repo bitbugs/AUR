@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Intent intentGrabacion;
 
-
-
     //***************************
     // NOTIFICACIONES
     //***************************
@@ -216,10 +214,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (mPlayer != null && fromUser) {
-                    mPlayer.seekTo(progress);
-                    //chronometer.setBase(SystemClock.elapsedRealtime() - mPlayer.getCurrentPosition());
-                    chronometer.setBase(SystemClock.elapsedRealtime() - progress);
-                    lastProgress = progress;
+                    lastProgress = (progress / 1000) * 1000;
+                    pauseProgress = (long) lastProgress;
+
+                    if (isPlaying) {
+                        chronometer.stop();
+                        mPlayer.pause();
+                    }
+
+                    chronometer.setBase(SystemClock.elapsedRealtime() - pauseProgress);
+                    mPlayer.seekTo(lastProgress);
+
+                    if (isPlaying) {
+                        chronometer.start();
+                        mPlayer.start();
+                    }
+
                 }
             }
 
@@ -341,9 +351,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             inicializaAudio();
 
         } else if (view == imageViewPlay) {
-            Toast.makeText(this, "Play", Toast.LENGTH_SHORT).show();
 
             if (!isPlaying && mPlayer!=null) {
+
+                lastProgress = (lastProgress / 1000) * 1000;
+                pauseProgress = (long) lastProgress;
+
+                //Toast.makeText(this, "Play: pauseProgress = "+pauseProgress+" y lastProgress = "+lastProgress, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Play", Toast.LENGTH_SHORT).show();
 
                 chronometer.setBase(SystemClock.elapsedRealtime() - pauseProgress);
                 chronometer.start();
@@ -356,31 +371,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
 
-                seekUpdate();
-
                 isPlaying = true;
                 imageViewPause.setVisibility(View.VISIBLE);
                 imageViewPlay.setVisibility(View.GONE);
             }
 
         }else if (view == imageViewPause) {
-            Toast.makeText(this, "Pause", Toast.LENGTH_SHORT).show();
-
             if (isPlaying) {
-
-                mPlayer.pause();
                 chronometer.stop();
+                mPlayer.pause();
 
-                //pauseProgress = SystemClock.elapsedRealtime() - chronometer.getBase();
-                lastProgress = (int) SystemClock.elapsedRealtime() - mPlayer.getCurrentPosition();
-                pauseProgress = lastProgress;
+                lastProgress = (int) (SystemClock.elapsedRealtime() - chronometer.getBase());
+                lastProgress = (lastProgress / 1000) * 1000;
+                pauseProgress = (long) lastProgress;
+
+                //Toast.makeText(this, "Pause: pauseProgress = "+pauseProgress+" y lastProgress = "+lastProgress, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Pause", Toast.LENGTH_SHORT).show();
 
                 isPlaying = false;
 
                 imageViewPlay.setVisibility(View.VISIBLE);
                 imageViewPause.setVisibility(View.GONE);
             }
-
         }
 
     }
@@ -410,10 +422,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         pauseProgress = 0;
         lastProgress = 0;
 
+        isPlaying = false;
+
         //mPlayer.seekTo(lastProgress);
         seekBar.setMax(mPlayer.getDuration());
         //seekBar.setProgress(lastProgress);
-        //seekUpdate();
+        seekUpdate();
 
 
         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -425,6 +439,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 chronometer.stop();
 
                 pauseProgress = 0;
+                lastProgress = 0;
 
                 mPlayer.seekTo(0);
                 seekBar.setProgress(0);
@@ -475,24 +490,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         mPlayer = null;
         pauseProgress = 0;
-
     }
 
 
-
     private void startPlaying() {
-
         mPlayer.start();
 
         seekBar.setProgress(lastProgress);
         mPlayer.seekTo(lastProgress);
         seekUpdate();
-
     }
-
-
-
-
     //********************************
     // FUNCIONES DE REPRODUCCION
     //********************************
