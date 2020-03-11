@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,7 +48,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
         setUpData(holder,position);
     }
 
-    private void setUpData(final ViewHolder holder, int position) {
+    private void setUpData(final ViewHolder holder, final int position) {
         Recording recording = recordingArrayList.get(position);
         holder.textViewName.setText(recording.getFileName());
 
@@ -67,9 +68,14 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                         switch (menuItem.getItemId()) {
                             case R.id.actionRenombrar:
                                 //manejar el clic sobre Renombrar
+                                //Toast.makeText(this, "SE SELECCIONO LA OPCION: Renombrar" , Toast.LENGTH_SHORT).show();
+                                String nombre = recordingArrayList.get(position).getFileName();
+                                Log.d("MENU DESPLEGABLE", "SE SELECCIONO LA OPCION: Renombrar");
+                                Log.d("NOMBRE", "EL ARCHIVO SE LLAMA: "+ nombre);
                                 break;
                             case R.id.actionCompartir:
                                 //manejar el clic sobre Renombrar
+
                                 break;
                             case R.id.actionEliminar:
                                 //manejar el clic sobre Eliminar
