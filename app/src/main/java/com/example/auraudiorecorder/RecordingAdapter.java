@@ -6,17 +6,15 @@ import android.os.Handler;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -68,10 +66,18 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                         switch (menuItem.getItemId()) {
                             case R.id.actionRenombrar:
                                 //manejar el clic sobre Renombrar
-                                //Toast.makeText(this, "SE SELECCIONO LA OPCION: Renombrar" , Toast.LENGTH_SHORT).show();
+
                                 String nombre = recordingArrayList.get(position).getFileName();
-                                Log.d("MENU DESPLEGABLE", "SE SELECCIONO LA OPCION: Renombrar");
-                                Log.d("NOMBRE", "EL ARCHIVO SE LLAMA: "+ nombre);
+                                Log.d("Click", "SE SELECCIONO LA OPCION: Renombrar");
+                                //Log.d("NOMBRE", "EL ARCHIVO SE LLAMA: "+ nombre);
+                                renombrar(position, nombre);
+                                holder.btnCambiarNombre.setVisibility(View.VISIBLE);
+                                holder.btnCancelarCambiarNombre.setVisibility(View.VISIBLE);
+
+                                //holder.textViewName.setCursorVisible(true);
+                                //holder.textViewName.setSelected();
+                                holder.textViewName.setText("HOLISSSS");
+
                                 break;
                             case R.id.actionCompartir:
                                 //manejar el clic sobre Renombrar
@@ -120,6 +126,10 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
         SeekBar seekBar;
         TextView textViewName;
         ImageButton botonMore;
+
+        Button btnCambiarNombre;
+        Button btnCancelarCambiarNombre;
+
         private String recordingUri;
         private int lastProgress = 0;
         private Handler mHandler = new Handler();
@@ -132,6 +142,11 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
             seekBar = itemView.findViewById(R.id.seekBar);
             textViewName = itemView.findViewById(R.id.textViewRecordingname);
             botonMore = itemView.findViewById(R.id.botonMore);
+            btnCambiarNombre = itemView.findViewById(R.id.btnCambiarNombre);
+            btnCancelarCambiarNombre = itemView.findViewById(R.id.btnCancelarCambiarNombre);
+
+            btnCambiarNombre.setVisibility(View.GONE);
+            btnCancelarCambiarNombre.setVisibility(View.GONE);
 
             imageViewPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -233,6 +248,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
             mPlayer = new MediaPlayer();
             try {
                 mPlayer.setDataSource(recordingUri);
+                //mPlayer.seekTo(lastProgress);
                 mPlayer.prepare();
                 mPlayer.start();
             } catch (IOException e) {
@@ -251,4 +267,18 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
             });
         }
     }
+
+
+    //***********************************************
+    // FUNCIONES RELATIVAS A LOS ARCHIVOS DE AUDIO
+    private void renombrar(int posicion,String nombre){
+        Log.d("FUNCION renombrar()", "LA POSICION ES: "+ posicion);
+        Log.d("FUNCION renombrar()", "EL ARCHIVO SE LLAMA: "+ nombre);
+
+    }
+
+    // FUNCIONES RELATIVAS A LOS ARCHIVOS DE AUDIO
+    //***********************************************
+
+
 }
