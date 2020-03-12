@@ -313,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     //**************************
-    // MANEJADOR DELOS CLICKS
+    // MANEJADOR DE LOS CLICKS
     //**************************
     @Override
     public void onClick(View view) {
@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //el imageview cambia al boton de STOP
 
             //Crea una notificacion en la barra de estado de android
-            crearNotificacion("Grabando...");
+            crearNotificacion(getString(R.string.grabando));
             fileName = mService.fileName;
 
         } else if (view == imageViewStop) {
@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //chronometer.setBase(SystemClock.elapsedRealtime());
 
             //Crea una notificacion en la barra de estado de android
-            crearNotificacion("Grabacion detenida.");
+            crearNotificacion(getString(R.string.grabacion_detenida));
 
             inicializaAudio();
 
@@ -358,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 pauseProgress = (long) lastProgress;
 
                 //Toast.makeText(this, "Play: pauseProgress = "+pauseProgress+" y lastProgress = "+lastProgress, Toast.LENGTH_LONG).show();
-                Toast.makeText(this, "Play", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.reproduciendo, Toast.LENGTH_SHORT).show();
 
                 chronometer.setBase(SystemClock.elapsedRealtime() - pauseProgress);
                 chronometer.start();
@@ -386,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 pauseProgress = (long) lastProgress;
 
                 //Toast.makeText(this, "Pause: pauseProgress = "+pauseProgress+" y lastProgress = "+lastProgress, Toast.LENGTH_LONG).show();
-                Toast.makeText(this, "Pause", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.pausado, Toast.LENGTH_SHORT).show();
 
                 isPlaying = false;
 

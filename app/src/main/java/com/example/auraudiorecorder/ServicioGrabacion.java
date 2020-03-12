@@ -152,8 +152,8 @@ public class ServicioGrabacion extends Service {
             }
 
             estado = "Grabando...";
-            Toast.makeText(this, "Gravesen...", Toast.LENGTH_SHORT).show();
-            Log.d("metodo", "Gravesen...");
+            Toast.makeText(this, R.string.grabando, Toast.LENGTH_SHORT).show();
+            Log.d("metodo", "Grabando...");
         }
 
     }
@@ -172,8 +172,8 @@ public class ServicioGrabacion extends Service {
             mRecorder = null;
 
             estado = "Grabacion detenida";
-            Toast.makeText(this, "La grabacion se ha detenido", Toast.LENGTH_SHORT).show();
-            Log.d("metodo", "La grabacion se ha detenido");
+            Toast.makeText(this, R.string.grabacion_detenida, Toast.LENGTH_SHORT).show();
+            Log.d("metodo", "Grabacion detenida.");
         }
 
     }
