@@ -588,13 +588,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             CharSequence name = "Texto de CharSenquence name";
             String description = "Texto de String descripcion";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
+            int importance = NotificationManager.IMPORTANCE_LOW;
             NotificationChannel mChannel = new NotificationChannel(channelId, name, importance);
 
             mChannel.setDescription(description);
-            mChannel.enableLights(true);
-            mChannel.setLightColor(Color.RED);
-            //mChannel.enableVibration(true);
+            //mChannel.enableLights(true);
+            //mChannel.setLightColor(Color.RED);
+            //mChannel.set
+            mChannel.enableVibration(false);
             //mChannel.setVibrationPattern(new long[]{100,200,300,400,500,400,300,200,400});
 
             mNotificationManager.createNotificationChannel(mChannel);
@@ -620,13 +621,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else {
 
             notificacion = new NotificationCompat.Builder(this, "miNotificacion");
-            notificacion.setAutoCancel(true);
             notificacion.setSmallIcon(R.drawable.ic_keyboard_voice_black_24dp);
-            notificacion.setPriority(Notification.PRIORITY_HIGH);
+            notificacion.setPriority(Notification.PRIORITY_LOW);
             notificacion.setTicker(".:AUR:.  " + mensaje);
             notificacion.setContentTitle("AUR Audio Recorder");
             notificacion.setContentText(mensaje);
             notificacion.setAutoCancel(false);
+
 
             Intent intentNotificacion = getIntent();
             intentNotificacion.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
