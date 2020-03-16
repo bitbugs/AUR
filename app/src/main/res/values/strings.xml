@@ -35,4 +35,9 @@
     <string name="grabacion_detenida">Grabación detenida.</string>
     <string name="pausado">Pausado.</string>
     <string name="reproduciendo">Reproduciendo.</string>
+    <string name="desea_borrar">¿Borrar el archivo?</string>
+    <string name="borrar">Borrar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="borrar_grabacion">Borrar grabación</string>
+    <string name="se_eligio_borrar">se eligió BORRAR</string>
 </resources>

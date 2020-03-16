@@ -36,4 +36,9 @@
     <string name="grabacion_detenida">Recording stopped.</string>
     <string name="pausado">Paused</string>
     <string name="reproduciendo">Playing</string>
+    <string name="desea_borrar">Delete the file?</string>
+    <string name="borrar">Delete</string>
+    <string name="cancelar">Cancel</string>
+    <string name="borrar_grabacion">Delete Recording</string>
+    <string name="se_eligio_borrar">DELETE was selected</string>
 </resources>

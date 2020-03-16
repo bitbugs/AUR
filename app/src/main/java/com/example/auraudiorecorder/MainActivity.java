@@ -5,19 +5,14 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-
-import android.content.SharedPreferences;
-
 import android.content.ServiceConnection;
-
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,14 +35,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 // comentario para probar las ramas y el pull
 // mi comentario Jorge
@@ -58,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView imageViewRecord, imageViewPlay, imageViewStop, imageViewPause;
     private SeekBar seekBar;
     private LinearLayout linearLayoutRecorder, linearLayoutPlay;
-    private MediaRecorder mRecorder;
+    // private MediaRecorder mRecorder;
     private MediaPlayer mPlayer;
     private String fileName = null;
     private int lastProgress = 0;
@@ -101,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //*********************************************
         intentGrabacion = new Intent(MainActivity.this, ServicioGrabacion.class);
 
-        //al ejecutar el startService()logro que el servicio permanesca abierto aunque la app haya sido cerrada
+        //al ejecutar el startService()logro que el servicio permanezca abierto aunque la app haya sido cerrada
         //getApplicationContext().startService(intent);
 
         bindService(intentGrabacion, sConnection, Context.BIND_AUTO_CREATE);
@@ -239,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+
         // DINAMICA DE LA SEEKBAR
         //**************************
 

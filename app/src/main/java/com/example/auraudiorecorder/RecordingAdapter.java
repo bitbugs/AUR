@@ -1,13 +1,13 @@
 package com.example.auraudiorecorder;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +16,13 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 
 public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.ViewHolder>{
 
@@ -69,11 +71,11 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                                 //manejar el clic sobre Renombrar
                                 break;
                             case R.id.actionCompartir:
-                                //manejar el clic sobre Renombrar
+                                //manejar el clic sobre Compartir
                                 break;
                             case R.id.actionEliminar:
-                                //manejar el clic sobre Eliminar
-                                break;
+                                lanzarConfirmarBorrado(null);
+                                return true;
                             case R.id.actionAdjuntarNota:
                                 //manejar el clic sobre Adjuntar nota
                                 break;
@@ -89,6 +91,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
             }
         });
 
+
         //manejar los cambios de icono entre play y pause
         if (recording.isPlaying()) {
             holder.imageViewPlay.setImageResource(R.drawable.ic_pause);
@@ -102,6 +105,23 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
         }
 
         holder.manageSeekBar(holder);
+    }
+
+    private void lanzarConfirmarBorrado(View view) {
+        final TextView alerta = new TextView(context);
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.borrar_grabacion)
+                .setMessage(R.string.desea_borrar)
+                .setView(alerta)
+                .setPositiveButton(R.string.borrar, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //llamar accion de borrar
+                        Toast.makeText(context, R.string.se_eligio_borrar, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(R.string.cancelar, null)
+                .show();
     }
 
     @Override
