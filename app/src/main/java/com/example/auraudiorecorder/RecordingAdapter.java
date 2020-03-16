@@ -32,6 +32,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
     private MediaPlayer mPlayer;
     private boolean isPlaying = false;
     private int last_index = -1;
+    //private int lastProgress = 0;
 
     public RecordingAdapter(Context context, ArrayList<Recording> recordingArrayList){
         this.context = context;
@@ -87,10 +88,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                                 //holder.editTextName.selectAll();
                                 holder.editTextName.requestFocus();
 
-
-
                                 //holder.textViewName.setText("HOLISSSS");
-
 
                                 break;
                             case R.id.actionCompartir:
@@ -141,8 +139,6 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                 File audioConNuevoNombre = new File(path + nuevoNombre + ".mp3");
 
                 //Rename
-
-
                 if( audio.renameTo(audioConNuevoNombre) ){
                     holder.textViewName.setText(nuevoNombre + ".mp3");
                     Log.d("CONFIRMACION", "se cambio el nombre correctamente a: "+nuevoNombre);
@@ -206,7 +202,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
         Button btnCancelarCambiarNombre;
 
         private String recordingUri;
-        private int lastProgress = 0;
+        //private int lastProgress = 0;
         private Handler mHandler = new Handler();
         ViewHolder holder;
 
@@ -236,6 +232,10 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                     recordingUri = recording.getUri();
 
                     if (isPlaying) {
+
+                        //antes de que se detenga capturo el progreso del audio
+                        recording.lastProgress = mPlayer.getCurrentPosition();
+
                         stopPlaying();
                         if (position == last_index) {
                             recording.setPlaying(false);
@@ -251,9 +251,14 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                     } else {
                         if (recording.isPlaying()) {
                             recording.setPlaying(false);
+
+                            //antes de que se detenga capturo el progreso del audio
+                            recording.lastProgress = mPlayer.getCurrentPosition();
+
                             stopPlaying();
                             Log.d("isPlaying","True");
                         } else {
+
                             startPlaying(recording,position);
                             recording.setPlaying(true);
                             seekBar.setMax(mPlayer.getDuration());
@@ -308,13 +313,16 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                 int mCurrentPosition = mPlayer.getCurrentPosition();
                 holder.seekBar.setMax(mPlayer.getDuration());
                 holder.seekBar.setProgress(mCurrentPosition);
-                lastProgress = mCurrentPosition;
+                //lastProgress = mCurrentPosition;
             }
             mHandler.postDelayed(runnable, 100);
         }
 
         private void stopPlaying() {
+
             try {
+                //lastProgress = mPlayer.getCurrentPosition();
+
                 mPlayer.release();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -327,8 +335,8 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
             mPlayer = new MediaPlayer();
             try {
                 mPlayer.setDataSource(recordingUri);
-                //mPlayer.seekTo(lastProgress);
                 mPlayer.prepare();
+                mPlayer.seekTo(audio.lastProgress);
                 mPlayer.start();
             } catch (IOException e) {
                 Log.e("LOG_TAG", "prepare() failed");
