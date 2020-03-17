@@ -32,4 +32,13 @@
     <string name="grabacion_guardada">The recording was successfully saved.</string>
     <string name="permisos_concedidos">Permissions were granted to AUR audio recorder.</string>
     <string name="explicar_permisos">AUR audio recorder cannot function without the permissions asked. Closing the app.</string>
+    <string name="grabando">Recording…</string>
+    <string name="grabacion_detenida">Recording stopped.</string>
+    <string name="pausado">Paused</string>
+    <string name="reproduciendo">Playing</string>
+    <string name="desea_borrar">Delete the file?</string>
+    <string name="borrar">Delete</string>
+    <string name="cancelar">Cancel</string>
+    <string name="borrar_grabacion">Delete Recording</string>
+    <string name="se_eligio_borrar">DELETE was selected</string>
 </resources>

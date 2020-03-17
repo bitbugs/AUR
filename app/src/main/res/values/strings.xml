@@ -6,7 +6,6 @@
     <string name="lista">Lista</string>
     <string name="acercaDeText">Desarrollado por bitbugs, en el marco del proyecto de 2do año del programa BIT. bitbugs está conformado por Jorge Arcelus, Rafael Burgueño y Soledad Echinope.</string>
     <string name="tipsText">En esta ventana se ven diferentes sugerencias de uso de la aplicación, para que los usuarios puedan aprovechar mejor las capacidades de la app.</string>
-    <string name="title_activity_tips">TipsActivity</string>
     <string name="no_se_encontraron_grabaciones">No se encontraron grabaciones.</string>
     <string name="reproducir">reproducir</string>
     <string name="pausar">pausar</string>
@@ -32,4 +31,13 @@
     <string name="grabacion_guardada">La grabación fue guardada con éxito.</string>
     <string name="permisos_concedidos">Se concedieron los permisos a AUR audio recorder.</string>
     <string name="explicar_permisos">AUR audio recorder no puede funcionar sin los permisos solicitados. Saliendo de la aplicación.</string>
+    <string name="grabando">Grabando…</string>
+    <string name="grabacion_detenida">Grabación detenida.</string>
+    <string name="pausado">Pausado.</string>
+    <string name="reproduciendo">Reproduciendo.</string>
+    <string name="desea_borrar">¿Borrar el archivo?</string>
+    <string name="borrar">Borrar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="borrar_grabacion">Borrar grabación</string>
+    <string name="se_eligio_borrar">se eligió BORRAR</string>
 </resources>
