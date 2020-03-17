@@ -3,7 +3,7 @@ package com.example.auraudiorecorder;
 public class Recording {
     String Uri, fileName;
     boolean isPlaying = false;
-
+    int lastProgress = 0;
 
     public Recording(String uri, String fileName, boolean isPlaying) {
         Uri = uri;

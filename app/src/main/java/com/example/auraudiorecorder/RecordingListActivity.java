@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,6 +25,10 @@ public class RecordingListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        textViewNoRecordings = findViewById(R.id.textViewNoRecordings);
+
+
         setContentView(R.layout.activity_recording_list);
 
         recordingArraylist = new ArrayList<>();
@@ -40,7 +45,9 @@ public class RecordingListActivity extends AppCompatActivity {
         File directory = new File(path);
         File[] files = directory.listFiles();
         Log.d("Files", "Size: " + files.length);
-        if (files != null) {
+
+        //no era distinto de null, es tamaño mayor que cero!
+        if (files.length > 0) {
             for (int i = 0; i < files.length; i++) {
                 Log.d("Files", "FileName:" + files[i].getName());
                 String fileName = files[i].getName();
@@ -55,6 +62,7 @@ public class RecordingListActivity extends AppCompatActivity {
             setAdaptertoRecyclerView();
 
         } else {
+            Toast.makeText(this, "No se han encontrado grabaciones", Toast.LENGTH_SHORT).show();
             textViewNoRecordings.setVisibility(View.VISIBLE);
             recyclerViewRecordings.setVisibility(View.GONE);
         }
@@ -96,5 +104,9 @@ public class RecordingListActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+
+
 
 }

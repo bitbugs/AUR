@@ -12,6 +12,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,10 +54,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int lastProgress = 0;
     private long pauseProgress;
     private Handler mHandler = new Handler();
-    private int RECORD_AUDIO_REQUEST_CODE =123 ;
+    private int RECORD_AUDIO_REQUEST_CODE =1234 ;
     private boolean isPlaying = false;
     private boolean isRecording = false;
     private ServicioGrabacion mService;
+
+    //para poder silenciar el dispositivo mientras se esta grabando audio
+    AudioManager audioManager;
+
 
     Intent intentGrabacion;
 
@@ -84,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getPermissionToRecordAudio();
         }
+
+        //se inicializa el audioManager
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         //*********************************************
         //bindService - conecta con ServicioGrabacion
@@ -141,6 +149,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override protected void onDestroy() {
         //Toast.makeText(this, "El MainActivity ejecuto onDestroy()", Toast.LENGTH_SHORT).show();
         //Log.d("metodo", "El MainActivity ejecuto onDestroy()");
+
+        //antes de terminar la app regresa el audio del dispositivo a modo normal
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+
         super.onDestroy();
     }
 
@@ -311,6 +323,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (view == imageViewRecord) {
             prepareForRecording();
 
+            //pone el dispositivo en modo silencioso
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+
             //comenzar el cronometro
             chronometer.setBase(SystemClock.elapsedRealtime());
             chronometer.start();
@@ -328,6 +343,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         } else if (view == imageViewStop) {
             prepareForStop();
+
+            //regresa el dispositivo al modo normal de audio
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 
             mService.stopRecording();
 
@@ -522,20 +540,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void getPermissionToRecordAudio() {
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !notificationManager.isNotificationPolicyAccessGranted()) {
+            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+            startActivity(intent);
+        }
+
         /* 1) Usar la version de la libreria de soporte ContextCompat.checkSelfPermission para evitar tener que verificar
         * la version build ya que Context.checkSelfPermission solo esta disponible en Marshmallow.
         * 2) Siempre hay que verificar los permisos, aunque ya hayan sido concedidos, ya que el usuario puede revocarlos
         * despues de haberlos otorgado.*/
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NOTIFICATION_POLICY) != PackageManager.PERMISSION_GRANTED) {
 
             /* Los permisos aun no están otorgados.
             * Hay que verificar si ya se le pidieron antes los permisos, y el usuario los denego. Si paso eso, hay que explicar con mas detalle
             * el por que son necesarios.
             * Se lanza una peticion asincronica (async request) para obtener los permisos. Esto mostrara el cuadro de dialogo estandar
             * de solicitud de permisos.*/
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_NOTIFICATION_POLICY},
                     RECORD_AUDIO_REQUEST_CODE);
 
         }
@@ -549,10 +575,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                            @NonNull int[] grantResults) {
         // Asegurarse que es el codigo original del pedido de permisos
         if (requestCode == RECORD_AUDIO_REQUEST_CODE) {
-            if (grantResults.length == 3 &&
+            if (grantResults.length == 4 &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[2] == PackageManager.PERMISSION_GRANTED){
+                    && grantResults[2] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[3] == PackageManager.PERMISSION_GRANTED){
 
                 Toast.makeText(this, R.string.permisos_concedidos, Toast.LENGTH_SHORT).show();
 
@@ -578,13 +605,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             CharSequence name = "Texto de CharSenquence name";
             String description = "Texto de String descripcion";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
+            int importance = NotificationManager.IMPORTANCE_LOW;
             NotificationChannel mChannel = new NotificationChannel(channelId, name, importance);
 
             mChannel.setDescription(description);
-            mChannel.enableLights(true);
-            mChannel.setLightColor(Color.RED);
-            //mChannel.enableVibration(true);
+            //mChannel.enableLights(true);
+            //mChannel.setLightColor(Color.RED);
+            //mChannel.set
+            mChannel.enableVibration(false);
             //mChannel.setVibrationPattern(new long[]{100,200,300,400,500,400,300,200,400});
 
             mNotificationManager.createNotificationChannel(mChannel);
@@ -610,13 +638,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else {
 
             notificacion = new NotificationCompat.Builder(this, "miNotificacion");
-            notificacion.setAutoCancel(true);
-            notificacion.setSmallIcon(R.drawable.ic_keyboard_voice_black_24dp);
-            notificacion.setPriority(Notification.PRIORITY_HIGH);
+
+
+            //notificacion.setSmallIcon(R.drawable.ic_keyboard_voice_black_24dp);
+            //no permite establecer un icono en xml, solo admite png
+            notificacion.setSmallIcon(R.mipmap.ic_launcher);
+            //notificacion.setSmallIcon(R.drawable.ic_microphone);
+
+
+            notificacion.setPriority(Notification.PRIORITY_LOW);
             notificacion.setTicker(".:AUR:.  " + mensaje);
             notificacion.setContentTitle("AUR Audio Recorder");
             notificacion.setContentText(mensaje);
             notificacion.setAutoCancel(false);
+
 
             Intent intentNotificacion = getIntent();
             intentNotificacion.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/blanco"
@@ -10,59 +11,88 @@
     android:paddingEnd="10dp"
     android:paddingBottom="10dp">
 
-    <ImageView
-        android:id="@+id/imageViewPlay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:contentDescription="@string/reproducir"
-        android:focusable="true"
-        android:src="@drawable/ic_play"
-        android:tint="@color/colorPrimary" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_toEndOf="@+id/imageViewPlay"
-        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textViewRecordingname"
+        <ImageView
+            android:id="@+id/imageViewPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Grabacion 001"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:layout_gravity="center_vertical"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:contentDescription="@string/reproducir"
+            android:focusable="true"
+            android:src="@drawable/ic_play"
+            android:tint="@color/colorPrimary" />
 
-        <SeekBar
-            android:id="@+id/seekBar"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:visibility="gone" />
+            android:layout_marginStart="30dp"
+            android:layout_toEndOf="@+id/imageViewPlay"
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="20dp"
-            android:background="@color/colorPrimary" />
+            <TextView
+                android:id="@+id/textViewRecordingname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Grabacion 001"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/editTextRecordingName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textShortMessage"
+                android:text="editame y decime marta"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:visibility="gone" />
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/colorPrimary" />
+
+            <Button
+                android:id="@+id/btnCambiarNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Cambiar Nombre"
+                tools:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnCancelarCambiarNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Cancelar"
+                tools:visibility="gone" />
+
+        </LinearLayout>
 
     <ImageButton
-        android:id="@+id/botonMore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="center_vertical|end"
-        android:background="@color/blanco"
-        android:contentDescription="@string/mas_opciones"
-        app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+            android:id="@+id/botonMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center_vertical|end"
+            android:background="@color/blanco"
+            android:contentDescription="@string/mas_opciones"
+            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
 
 </RelativeLayout>

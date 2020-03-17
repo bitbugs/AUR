@@ -11,6 +11,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -20,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -31,6 +36,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
     private MediaPlayer mPlayer;
     private boolean isPlaying = false;
     private int last_index = -1;
+    //private int lastProgress = 0;
 
     public RecordingAdapter(Context context, ArrayList<Recording> recordingArrayList){
         this.context = context;
@@ -49,9 +55,10 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
         setUpData(holder,position);
     }
 
-    private void setUpData(final ViewHolder holder, int position) {
+    private void setUpData(final ViewHolder holder, final int position) {
         Recording recording = recordingArrayList.get(position);
         holder.textViewName.setText(recording.getFileName());
+        holder.editTextName.setText(recording.getFileName().replace(".mp3", ""));
 
         holder.botonMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,9 +76,32 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                         switch (menuItem.getItemId()) {
                             case R.id.actionRenombrar:
                                 //manejar el clic sobre Renombrar
+
+                                String nombre = recordingArrayList.get(position).getFileName();
+                                Log.d("Click", "SE SELECCIONO LA OPCION: Renombrar");
+                                //Log.d("NOMBRE", "EL ARCHIVO SE LLAMA: "+ nombre);
+                                //renombrar(position, nombre);
+
+                                holder.editTextName.setVisibility(View.VISIBLE);
+                                holder.textViewName.setVisibility(View.GONE);
+
+                                holder.btnCambiarNombre.setVisibility(View.VISIBLE);
+                                holder.btnCancelarCambiarNombre.setVisibility(View.VISIBLE);
+
+                                holder.editTextName.setSelectAllOnFocus(true);
+                                //holder.editTextName.selectAll();
+                                holder.editTextName.requestFocus();
+
+                                //holder.textViewName.setText("HOLISSSS");
+
                                 break;
                             case R.id.actionCompartir:
+
+                                //manejar el clic sobre Renombrar
+
+
                                 //manejar el clic sobre Compartir
+
                                 break;
                             case R.id.actionEliminar:
                                 lanzarConfirmarBorrado(null);
@@ -90,6 +120,64 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                 popup.show();
             }
         });
+
+
+
+        //***************************************
+        // BOTONES PARA CAMBIAR NOMBRE
+        holder.btnCambiarNombre.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                String nombre = recordingArrayList.get(position).getFileName();
+                //Log.d("BOTON", "se hizo click en el btnCambiarNombre!!!!!"+nombre);
+
+                File root = android.os.Environment.getExternalStorageDirectory();
+                String path = root.getAbsolutePath() + "/AUR/Audios/";
+
+                File audio = new File(path + nombre);
+
+
+
+                //File de destino
+                String nuevoNombre = holder.editTextName.getText().toString();
+                //el siguiente if maneja el error generado si el nuevo nombre es un string vacio
+                if(nuevoNombre.isEmpty()){
+                    Log.d("CAMBIO DE NOMBRE", "se debe especificar un nuevo nombre para el archivo!");
+                    nuevoNombre = nombre.replace(".mp3","");
+                }
+                File audioConNuevoNombre = new File(path + nuevoNombre + ".mp3");
+
+                //Rename
+                if( audio.renameTo(audioConNuevoNombre) ){
+                    holder.textViewName.setText(nuevoNombre + ".mp3");
+                    Log.d("CONFIRMACION", "se cambio el nombre correctamente a: "+nuevoNombre);
+                } else{
+                    Log.d("CONFIRMACION", "ocurrio un error al cambiar el nombre del archivo: "+nombre);
+                }
+
+
+
+                holder.textViewName.setVisibility(View.VISIBLE);
+                holder.editTextName.setVisibility(View.GONE);
+                holder.btnCambiarNombre.setVisibility(View.GONE);
+                holder.btnCancelarCambiarNombre.setVisibility(View.GONE);
+            }
+        });
+
+        holder.btnCancelarCambiarNombre.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Log.d("BOTON", "se hizo click en el btnCancelarCambiarNombre!!!!!");
+
+                holder.textViewName.setVisibility(View.VISIBLE);
+                holder.editTextName.setVisibility(View.GONE);
+                holder.btnCambiarNombre.setVisibility(View.GONE);
+                holder.btnCancelarCambiarNombre.setVisibility(View.GONE);
+            }
+        });
+        // BOTONES PARA CAMBIAR NOMBRE
+        //***************************************
+
 
 
         //manejar los cambios de icono entre play y pause
@@ -133,11 +221,19 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
         ImageView imageViewPlay;
         SeekBar seekBar;
         TextView textViewName;
+        EditText editTextName;
+
         ImageButton botonMore;
+
+        Button btnCambiarNombre;
+        Button btnCancelarCambiarNombre;
+
         private String recordingUri;
-        private int lastProgress = 0;
+        //private int lastProgress = 0;
         private Handler mHandler = new Handler();
         ViewHolder holder;
+
+
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -145,7 +241,14 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
             imageViewPlay = itemView.findViewById(R.id.imageViewPlay);
             seekBar = itemView.findViewById(R.id.seekBar);
             textViewName = itemView.findViewById(R.id.textViewRecordingname);
+            editTextName = itemView.findViewById(R.id.editTextRecordingName);
             botonMore = itemView.findViewById(R.id.botonMore);
+            btnCambiarNombre = itemView.findViewById(R.id.btnCambiarNombre);
+            btnCancelarCambiarNombre = itemView.findViewById(R.id.btnCancelarCambiarNombre);
+
+            editTextName.setVisibility(View.GONE);
+            btnCambiarNombre.setVisibility(View.GONE);
+            btnCancelarCambiarNombre.setVisibility(View.GONE);
 
             imageViewPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -156,6 +259,10 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                     recordingUri = recording.getUri();
 
                     if (isPlaying) {
+
+                        //antes de que se detenga capturo el progreso del audio
+                        recording.lastProgress = mPlayer.getCurrentPosition();
+
                         stopPlaying();
                         if (position == last_index) {
                             recording.setPlaying(false);
@@ -171,9 +278,14 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                     } else {
                         if (recording.isPlaying()) {
                             recording.setPlaying(false);
+
+                            //antes de que se detenga capturo el progreso del audio
+                            recording.lastProgress = mPlayer.getCurrentPosition();
+
                             stopPlaying();
                             Log.d("isPlaying","True");
                         } else {
+
                             startPlaying(recording,position);
                             recording.setPlaying(true);
                             seekBar.setMax(mPlayer.getDuration());
@@ -228,13 +340,16 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                 int mCurrentPosition = mPlayer.getCurrentPosition();
                 holder.seekBar.setMax(mPlayer.getDuration());
                 holder.seekBar.setProgress(mCurrentPosition);
-                lastProgress = mCurrentPosition;
+                //lastProgress = mCurrentPosition;
             }
             mHandler.postDelayed(runnable, 100);
         }
 
         private void stopPlaying() {
+
             try {
+                //lastProgress = mPlayer.getCurrentPosition();
+
                 mPlayer.release();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -248,6 +363,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
             try {
                 mPlayer.setDataSource(recordingUri);
                 mPlayer.prepare();
+                mPlayer.seekTo(audio.lastProgress);
                 mPlayer.start();
             } catch (IOException e) {
                 Log.e("LOG_TAG", "prepare() failed");
@@ -264,5 +380,22 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                 }
             });
         }
+
+
+
     }
+
+
+    //***********************************************
+    // FUNCIONES RELATIVAS A LOS ARCHIVOS DE AUDIO
+    private void renombrar(int posicion,String nombre){
+        Log.d("FUNCION renombrar()", "LA POSICION ES: "+ posicion);
+        Log.d("FUNCION renombrar()", "EL ARCHIVO SE LLAMA: "+ nombre);
+
+    }
+
+    // FUNCIONES RELATIVAS A LOS ARCHIVOS DE AUDIO
+    //***********************************************
+
+
 }
