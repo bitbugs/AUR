@@ -33,7 +33,6 @@
             android:theme="@style/AppTheme.Dialog">
         </activity>
 
-
         <activity
             android:name=".TipsActivity"
             android:label="@string/sugerencias"
@@ -55,6 +54,7 @@
             android:enabled="true"
             android:exported="true"></service>
 
+        <meta-data android:name="com.example.auraudiorecorder.NotificationAccentColor.DEFAULT" android:value="#d60000"/>
 
     </application>
 

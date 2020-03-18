@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,7 +60,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
     private void setUpData(final ViewHolder holder, final int position) {
         Recording recording = recordingArrayList.get(position);
         holder.textViewName.setText(recording.getFileName());
-        holder.editTextName.setText(recording.getFileName().replace(".mp3", ""));
+        //holder.editTextName.setText(recording.getFileName().replace(".mp3", ""));
 
         holder.botonMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,34 +80,58 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                                 //manejar el clic sobre Renombrar
 
                                 String nombre = recordingArrayList.get(position).getFileName();
-                                Log.d("Click", "SE SELECCIONO LA OPCION: Renombrar");
-                                //Log.d("NOMBRE", "EL ARCHIVO SE LLAMA: "+ nombre);
-                                //renombrar(position, nombre);
+                                AlertDialog.Builder renameDialog = new AlertDialog.Builder(context);
+                                renameDialog.setTitle(R.string.renombrar);
 
-                                holder.editTextName.setVisibility(View.VISIBLE);
-                                holder.textViewName.setVisibility(View.GONE);
+                                //EditText view para ingresar el nombre
+                                final EditText input = new EditText(context);
+                                input.setText(holder.textViewName.getText());
+                                renameDialog.setView(input);
+                                renameDialog.setPositiveButton(R.string.renombrar, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        String nombre = recordingArrayList.get(position).getFileName();
 
-                                holder.btnCambiarNombre.setVisibility(View.VISIBLE);
-                                holder.btnCancelarCambiarNombre.setVisibility(View.VISIBLE);
+                                        File root = android.os.Environment.getExternalStorageDirectory();
+                                        String path = root.getAbsolutePath() + "/AUR/Audios/";
 
-                                holder.editTextName.setSelectAllOnFocus(true);
-                                //holder.editTextName.selectAll();
-                                holder.editTextName.requestFocus();
+                                        File audio = new File(path + nombre);
 
-                                //holder.textViewName.setText("HOLISSSS");
+                                        //File de destino
+                                        String nuevoNombre = input.getText().toString();
+
+//                                            audio.renameTo(new File(audio, nuevoNombre));
+//                                            Toast.makeText(context, "Se cambió el nombre", Toast.LENGTH_SHORT).show();
+
+                                        //el siguiente if maneja el error generado si el nuevo nombre es un string vacio
+                                        if (nuevoNombre.isEmpty()) {
+                                            Log.d("CAMBIO DE NOMBRE", "se debe especificar un nuevo nombre para el archivo!");
+                                            nuevoNombre = nombre.replace(".mp3","");
+                                        }
+                                        File audioConNuevoNombre = new File(path + nuevoNombre + ".mp3");
+
+                                        //Rename
+                                        if (audio.renameTo(audioConNuevoNombre)) {
+                                            holder.textViewName.setText(nuevoNombre + ".mp3");
+                                            Log.d("CONFIRMACION", "se cambio el nombre correctamente a: "+nuevoNombre);
+                                        } else {
+                                            Log.d("CONFIRMACION", "ocurrio un error al cambiar el nombre del archivo: "+nombre);
+                                        }
+
+                                    }
+                                });
+                                renameDialog.setNegativeButton(R.string.cancelar, null);
+                                renameDialog.create();
+                                renameDialog.show();
 
                                 break;
+
                             case R.id.actionCompartir:
-
-                                //manejar el clic sobre Renombrar
-
-
                                 //manejar el clic sobre Compartir
-
                                 break;
                             case R.id.actionEliminar:
                                 lanzarConfirmarBorrado(null);
-                                return true;
+                                break;
                             case R.id.actionAdjuntarNota:
                                 //manejar el clic sobre Adjuntar nota
                                 break;
@@ -125,56 +151,56 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
         //***************************************
         // BOTONES PARA CAMBIAR NOMBRE
-        holder.btnCambiarNombre.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                String nombre = recordingArrayList.get(position).getFileName();
-                //Log.d("BOTON", "se hizo click en el btnCambiarNombre!!!!!"+nombre);
-
-                File root = android.os.Environment.getExternalStorageDirectory();
-                String path = root.getAbsolutePath() + "/AUR/Audios/";
-
-                File audio = new File(path + nombre);
-
-
-
-                //File de destino
-                String nuevoNombre = holder.editTextName.getText().toString();
-                //el siguiente if maneja el error generado si el nuevo nombre es un string vacio
-                if(nuevoNombre.isEmpty()){
-                    Log.d("CAMBIO DE NOMBRE", "se debe especificar un nuevo nombre para el archivo!");
-                    nuevoNombre = nombre.replace(".mp3","");
-                }
-                File audioConNuevoNombre = new File(path + nuevoNombre + ".mp3");
-
-                //Rename
-                if( audio.renameTo(audioConNuevoNombre) ){
-                    holder.textViewName.setText(nuevoNombre + ".mp3");
-                    Log.d("CONFIRMACION", "se cambio el nombre correctamente a: "+nuevoNombre);
-                } else{
-                    Log.d("CONFIRMACION", "ocurrio un error al cambiar el nombre del archivo: "+nombre);
-                }
-
-
-
-                holder.textViewName.setVisibility(View.VISIBLE);
-                holder.editTextName.setVisibility(View.GONE);
-                holder.btnCambiarNombre.setVisibility(View.GONE);
-                holder.btnCancelarCambiarNombre.setVisibility(View.GONE);
-            }
-        });
-
-        holder.btnCancelarCambiarNombre.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Log.d("BOTON", "se hizo click en el btnCancelarCambiarNombre!!!!!");
-
-                holder.textViewName.setVisibility(View.VISIBLE);
-                holder.editTextName.setVisibility(View.GONE);
-                holder.btnCambiarNombre.setVisibility(View.GONE);
-                holder.btnCancelarCambiarNombre.setVisibility(View.GONE);
-            }
-        });
+//        holder.btnCambiarNombre.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                String nombre = recordingArrayList.get(position).getFileName();
+//                //Log.d("BOTON", "se hizo click en el btnCambiarNombre!!!!!"+nombre);
+//
+//                File root = android.os.Environment.getExternalStorageDirectory();
+//                String path = root.getAbsolutePath() + "/AUR/Audios/";
+//
+//                File audio = new File(path + nombre);
+//
+//
+//
+//                //File de destino
+//                String nuevoNombre = holder.editTextName.getText().toString();
+//                //el siguiente if maneja el error generado si el nuevo nombre es un string vacio
+//                if(nuevoNombre.isEmpty()){
+//                    Log.d("CAMBIO DE NOMBRE", "se debe especificar un nuevo nombre para el archivo!");
+//                    nuevoNombre = nombre.replace(".mp3","");
+//                }
+//                File audioConNuevoNombre = new File(path + nuevoNombre + ".mp3");
+//
+//                //Rename
+//                if( audio.renameTo(audioConNuevoNombre) ){
+//                    holder.textViewName.setText(nuevoNombre + ".mp3");
+//                    Log.d("CONFIRMACION", "se cambio el nombre correctamente a: "+nuevoNombre);
+//                } else{
+//                    Log.d("CONFIRMACION", "ocurrio un error al cambiar el nombre del archivo: "+nombre);
+//                }
+//
+//
+//
+//                holder.textViewName.setVisibility(View.VISIBLE);
+//                holder.editTextName.setVisibility(View.GONE);
+//                holder.btnCambiarNombre.setVisibility(View.GONE);
+//                holder.btnCancelarCambiarNombre.setVisibility(View.GONE);
+//            }
+//        });
+//
+//        holder.btnCancelarCambiarNombre.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                Log.d("BOTON", "se hizo click en el btnCancelarCambiarNombre!!!!!");
+//
+//                holder.textViewName.setVisibility(View.VISIBLE);
+//                holder.editTextName.setVisibility(View.GONE);
+//                holder.btnCambiarNombre.setVisibility(View.GONE);
+//                holder.btnCancelarCambiarNombre.setVisibility(View.GONE);
+//            }
+//        });
         // BOTONES PARA CAMBIAR NOMBRE
         //***************************************
 
@@ -195,6 +221,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
         holder.manageSeekBar(holder);
     }
 
+
     private void lanzarConfirmarBorrado(View view) {
         final TextView alerta = new TextView(context);
         new AlertDialog.Builder(context)
@@ -211,6 +238,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                 .setNegativeButton(R.string.cancelar, null)
                 .show();
     }
+
 
     @Override
     public int getItemCount() {
