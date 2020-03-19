@@ -302,7 +302,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                         miViewHolder.itemGrabacion.setVisibility(View.GONE);
                         //notifyItemRangeRemoved(position+1, position);
 
-                        Toast.makeText(context, R.string.se_eligio_borrar, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, R.string.se_eligio_borrar, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
