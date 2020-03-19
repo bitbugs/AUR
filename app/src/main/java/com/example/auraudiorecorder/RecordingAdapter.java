@@ -1,9 +1,13 @@
 package com.example.auraudiorecorder;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -18,10 +22,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
@@ -127,10 +133,44 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                                 break;
 
                             case R.id.actionCompartir:
-                                //manejar el clic sobre Compartir
+                                String nombreCompartir = recordingArrayList.get(position).getFileName();
+
+                                File root = android.os.Environment.getExternalStorageDirectory();
+                                String path = root.getAbsolutePath() + "/AUR/Audios/"+nombreCompartir;
+
+                                File audio = new File(path);
+                                Uri uri = Uri.parse(path);
+
+                                Intent compartiraudio = new Intent(Intent.ACTION_SEND);
+                                compartiraudio.setType("audio/*");
+
+                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+
+                                    //Uri imageUri = FileProvider.getUriForFile(context,"com.example.auradiorecorder.RecordingAdapter.provider", audio);
+
+
+                                    //compartiraudio.putExtra(Intent.EXTRA_STREAM, Uri.parse("android.resource://" + path));
+                                    /*en mi cel(android 9 Pie - api 28), comparte el audio en whatsapp pero no en gmail.
+                                        pero en la tablet(android 4.4 kit kat - 19) si comparte en gmail y no se si funciona en whatsapp*/
+                                    compartiraudio.putExtra(Intent.EXTRA_STREAM, uri);
+                                    //compartiraudio.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(audio));
+
+                                }else{
+                                    //esta linea no funciona parael android 4.4
+                                    //compartiraudio.putExtra(Intent.EXTRA_STREAM, uri);
+
+                                    //la siguiente linea si funciona para el 4.4,
+                                    compartiraudio.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(audio));
+                                }
+
+
+                                context.startActivity(compartiraudio);
+
                                 break;
                             case R.id.actionEliminar:
-                                lanzarConfirmarBorrado(null);
+                                String archivo = recordingArrayList.get(position).getFileName();
+                                lanzarConfirmarBorrado(archivo, holder, position);
+                                //return true;
                                 break;
                             case R.id.actionAdjuntarNota:
                                 //manejar el clic sobre Adjuntar nota
@@ -222,20 +262,46 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
     }
 
 
-    private void lanzarConfirmarBorrado(View view) {
+
+    private void lanzarConfirmarBorrado(final String archivo, final ViewHolder miViewHolder, final int position) {
+
         final TextView alerta = new TextView(context);
         new AlertDialog.Builder(context)
                 .setTitle(R.string.borrar_grabacion)
-                .setMessage(R.string.desea_borrar)
+                .setMessage(R.string.desea_borrar + " -> " + archivo)
                 .setView(alerta)
                 .setPositiveButton(R.string.borrar, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        File root = android.os.Environment.getExternalStorageDirectory();
+                        String path = root.getAbsolutePath() + "/AUR/Audios/";
+
+                        File audio = new File(path + archivo);
                         //llamar accion de borrar
+                        audio.delete();
+
+                        //oculta la vista del audio en la RecordingListActivity o reinicia la activity
+                        miViewHolder.imageViewPlay.setVisibility(View.GONE);
+                        miViewHolder.textViewName.setVisibility(View.GONE);
+                        miViewHolder.botonMore.setVisibility(View.GONE);
+
+                        miViewHolder.linea.setVisibility(View.GONE);
+                        miViewHolder.itemGrabacion.setPadding(0,0,0,0);
+                        miViewHolder.itemGrabacion.setPaddingRelative(0,0,0,0);
+
+                        miViewHolder.itemGrabacion.setVisibility(View.GONE);
+                        //notifyItemRangeRemoved(position+1, position);
+
                         Toast.makeText(context, R.string.se_eligio_borrar, Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton(R.string.cancelar, null)
+                .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //llamar accion de NO borrar
+                        Toast.makeText(context, "se eligio NO BORRAR", Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .show();
     }
 
@@ -261,10 +327,16 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
         private Handler mHandler = new Handler();
         ViewHolder holder;
 
+        RelativeLayout itemGrabacion;
+        View linea;
+
 
 
         public ViewHolder(View itemView) {
             super(itemView);
+
+            itemGrabacion = itemView.findViewById(R.id.itemLayout);
+            linea = itemView.findViewById(R.id.linea);
 
             imageViewPlay = itemView.findViewById(R.id.imageViewPlay);
             seekBar = itemView.findViewById(R.id.seekBar);

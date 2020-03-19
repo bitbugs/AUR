@@ -129,8 +129,10 @@ public class ServicioGrabacion extends Service {
 
             mRecorder = new MediaRecorder();
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            //mRecorder.setAudioEncodingBitRate(16000);
+            //mRecorder.setAudioSamplingRate(44100);
 
 
             /*root = android.os.Environment.getExternalStorageDirectory();
