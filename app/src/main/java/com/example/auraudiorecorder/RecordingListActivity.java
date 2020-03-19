@@ -62,7 +62,7 @@ public class RecordingListActivity extends AppCompatActivity {
             setAdaptertoRecyclerView();
 
         } else {
-            Toast.makeText(this, "No se han encontrado grabaciones", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "No se han encontrado grabaciones", Toast.LENGTH_SHORT).show();
             textViewNoRecordings.setVisibility(View.VISIBLE);
             recyclerViewRecordings.setVisibility(View.GONE);
         }
