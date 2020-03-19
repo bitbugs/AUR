@@ -1,9 +1,13 @@
 package com.example.auraudiorecorder;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -23,6 +27,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
@@ -97,20 +102,43 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
                                 break;
                             case R.id.actionCompartir:
+                                String nombreCompartir = recordingArrayList.get(position).getFileName();
 
-                                //manejar el clic sobre Renombrar
+                                File root = android.os.Environment.getExternalStorageDirectory();
+                                String path = root.getAbsolutePath() + "/AUR/Audios/"+nombreCompartir;
+
+                                File audio = new File(path);
+                                Uri uri = Uri.parse(path);
+
+                                Intent compartiraudio = new Intent(Intent.ACTION_SEND);
+                                compartiraudio.setType("audio/*");
+
+                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+
+                                    //Uri imageUri = FileProvider.getUriForFile(context,"com.example.auradiorecorder.RecordingAdapter.provider", audio);
 
 
-                                //manejar el clic sobre Compartir
+                                    //compartiraudio.putExtra(Intent.EXTRA_STREAM, Uri.parse("android.resource://" + path));
+                                    /*en mi cel(android 9 Pie - api 28), comparte el audio en whatsapp pero no en gmail.
+                                        pero en la tablet(android 4.4 kit kat - 19) si comparte en gmail y no se si funciona en whatsapp*/
+                                    compartiraudio.putExtra(Intent.EXTRA_STREAM, uri);
+                                    //compartiraudio.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(audio));
+
+                                }else{
+                                    //esta linea no funciona parael android 4.4
+                                    //compartiraudio.putExtra(Intent.EXTRA_STREAM, uri);
+
+                                    //la siguiente linea si funciona para el 4.4,
+                                    compartiraudio.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(audio));
+                                }
+
+
+                                context.startActivity(compartiraudio);
 
                                 break;
                             case R.id.actionEliminar:
                                 String archivo = recordingArrayList.get(position).getFileName();
                                 lanzarConfirmarBorrado(archivo, holder, position);
-
-                                //
-
-
                                 //return true;
                                 break;
                             case R.id.actionAdjuntarNota:
@@ -201,6 +229,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
         holder.manageSeekBar(holder);
     }
+
 
     private void lanzarConfirmarBorrado(final String archivo, final ViewHolder miViewHolder, final int position) {
         final TextView alerta = new TextView(context);
