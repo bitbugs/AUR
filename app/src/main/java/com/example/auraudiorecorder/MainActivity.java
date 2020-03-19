@@ -405,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
     //**************************
-    // MANEJADOR DELOS CLICKS
+    // MANEJADOR DE LOS CLICKS
     //**************************
 
 
@@ -642,7 +642,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //notificacion.setSmallIcon(R.drawable.ic_keyboard_voice_black_24dp);
             //no permite establecer un icono en xml, solo admite png
-            notificacion.setSmallIcon(R.mipmap.ic_launcher);
+            notificacion.setSmallIcon(R.drawable.ic_stat_name);
             //notificacion.setSmallIcon(R.drawable.ic_microphone);
 
 
