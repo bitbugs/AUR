@@ -85,15 +85,19 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                             case R.id.actionRenombrar:
                                 //manejar el clic sobre Renombrar
 
-                                String nombre = recordingArrayList.get(position).getFileName();
+                                String nombre = recordingArrayList.get(position).getFileName().replace(".mp3", "");
                                 AlertDialog.Builder renameDialog = new AlertDialog.Builder(context);
                                 renameDialog.setTitle(R.string.renombrar);
 
                                 //EditText view para ingresar el nombre
                                 final EditText input = new EditText(context);
-                                input.setText(holder.textViewName.getText());
+                                input.setText(nombre);
+                                input.setSelectAllOnFocus(true);
+                                //input.setText(holder.textViewName.getText());
                                 renameDialog.setView(input);
+
                                 renameDialog.setPositiveButton(R.string.renombrar, new DialogInterface.OnClickListener() {
+
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         String nombre = recordingArrayList.get(position).getFileName();
@@ -124,11 +128,17 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                                             Log.d("CONFIRMACION", "ocurrio un error al cambiar el nombre del archivo: "+nombre);
                                         }
 
+                                        //relanzar la activity conservando la main como activity anterior
+                                        Intent intent = new Intent(context, RecordingListActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        context.startActivity(intent);
+
                                     }
                                 });
                                 renameDialog.setNegativeButton(R.string.cancelar, null);
                                 renameDialog.create();
                                 renameDialog.show();
+                                //input.requestFocus();
 
                                 break;
 
