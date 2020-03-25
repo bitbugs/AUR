@@ -12,6 +12,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -25,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,6 +45,7 @@ import androidx.preference.PreferenceManager;
 // mi comentario Jorge
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private View rootView;
     private Toolbar toolbar;
     private Chronometer chronometer;
     private ImageView imageViewRecord, imageViewPlay, imageViewStop, imageViewPause;
@@ -58,6 +61,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isPlaying = false;
     private boolean isRecording = false;
     private ServicioGrabacion mService;
+
+    SharedPreferences preferencias;
+    private boolean temaOscuro = false;
+    private Window window;
 
     //para poder silenciar el dispositivo mientras se esta grabando audio
     AudioManager audioManager;
@@ -82,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Log.d("metodo", "El MainActivity ejecuto onCreate()");
 
         super.onCreate(savedInstanceState);
+
+        this.window = getWindow();
 
         setContentView(R.layout.activity_main);
 
@@ -127,6 +136,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Toast.makeText(this, "El MainActivity ejecuto onResume()", Toast.LENGTH_SHORT).show();
         //Log.d("metodo", "El MainActivity ejecuto onResume()");
         super.onResume();
+
+        /*==================================
+            RE-SETEA LAS CONFIGURACIONES
+        ==================================*/
+        preferencias = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean prefTemaOscuro = preferencias.getBoolean("temaOscuro", false);
+        String prefFormatoGrabacion = preferencias.getString("formatoGrabacion", "1");
+        String prefMuestreoGrabacion = preferencias.getString("muestreoGrabacion", "2");
+
+
+        if(temaOscuro != prefTemaOscuro && prefTemaOscuro){
+            //si se cambia el switch de tema oscuro en las preferencias se cambiaran los colores
+            Toast.makeText(this, "cambiamos a modo oscuro", Toast.LENGTH_SHORT).show();
+
+            //tool bar
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary_DarkTheme));
+            toolbar.setTitleTextColor(getResources().getColor(R.color.grisTexto_DarkTheme));
+            //setSupportActionBar(toolbar);
+
+            //background de la activity
+            //View rootView = linearLayoutRecorder.getRootView();
+            rootView.setBackgroundColor(getResources().getColor(R.color.negro));
+
+
+        }else if(temaOscuro != prefTemaOscuro && !prefTemaOscuro){
+            //seteamos los colores claros
+            Toast.makeText(this, "cambiamos a modo claro", Toast.LENGTH_SHORT).show();
+
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            toolbar.setTitleTextColor(getResources().getColor(R.color.grisTexto));
+            //setSupportActionBar(toolbar);
+
+            //background de la activity
+            //View rootView = linearLayoutRecorder.getRootView();
+            rootView.setBackgroundColor(getResources().getColor(R.color.blanco));
+
+        }
+
+        temaOscuro = prefTemaOscuro;
+        //Toast.makeText(this, "tema oscuro: "+prefTemaOscuro+". Formato: "+prefFormatoGrabacion+". Muestreo: "+prefMuestreoGrabacion, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "tema oscuro esta en "+temaOscuro, Toast.LENGTH_SHORT).show();
+        /*==================================
+            RE-SETEA LAS CONFIGURACIONES
+        ==================================*/
 
     }
     @Override protected void onPause() {
@@ -191,9 +244,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("AUR audio recorder");
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.grisTexto));
         setSupportActionBar(toolbar);
 
         linearLayoutRecorder = findViewById(R.id.linearLayoutRecorder);
+        //rootView = linearLayoutRecorder.getRootView();
+        rootView = findViewById(R.id.root_ActivityMain);
+
         chronometer = findViewById(R.id.chronometerTimer);
         chronometer.setBase(SystemClock.elapsedRealtime());
 

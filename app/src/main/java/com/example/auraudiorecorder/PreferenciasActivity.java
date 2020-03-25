@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class PreferenciasActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -12,5 +13,6 @@ public class PreferenciasActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(android.R.id.content, new PreferenciasFragment())
                 .commit();
+
     }
 }

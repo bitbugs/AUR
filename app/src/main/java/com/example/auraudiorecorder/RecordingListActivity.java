@@ -38,6 +38,14 @@ public class RecordingListActivity extends AppCompatActivity {
         fetchRecordings();
     }
 
+    @Override
+    protected void onResume() {
+        Toast.makeText(this, "El RecordingListActivity ejecuto onResume()", Toast.LENGTH_SHORT).show();
+        //Log.d("metodo", "El RecordingListActivity ejecuto onResume()");
+        super.onResume();
+
+    }
+
     private void fetchRecordings() {
         File root = android.os.Environment.getExternalStorageDirectory();
         String path = root.getAbsolutePath() + "/AUR/Audios";
