@@ -4,13 +4,14 @@
     android:id="@+id/root_ActivityMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blanco"
+    android:background="?attr/backgroundcolor"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="?attr/backgroundcolor"/>
 
     <LinearLayout
         android:id="@+id/linearLayoutRecorder"
@@ -26,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="60sp"
-            android:textColor="@color/colorPrimary"
+            android:textColor="?attr/colorPrimary"
             android:layout_gravity="center_horizontal"
             />
 
@@ -50,7 +51,7 @@
                 android:contentDescription="@string/reproducir"
                 android:focusable="true"
                 android:src="@drawable/ic_play"
-                android:tint="@color/colorPrimaryDark" />
+                android:tint="?attr/colorPrimary" />
             <ImageView
                 android:id="@+id/imageViewPause"
                 android:layout_width="wrap_content"
@@ -61,7 +62,7 @@
                 android:contentDescription="@string/pausar"
                 android:focusable="true"
                 android:src="@drawable/ic_pause"
-                android:tint="@color/colorPrimaryDark"
+                android:tint="?attr/colorPrimary"
                 android:visibility="gone" />
             <SeekBar
                 android:id="@+id/seekBar"
@@ -107,7 +108,7 @@
                 android:contentDescription="@string/detener"
                 android:focusable="true"
                 android:src="@drawable/ic_stop"
-                android:tint="@color/colorPrimaryDark"
+                android:tint="?attr/colorPrimary"
                 android:visibility="gone" />
 
         </LinearLayout>
