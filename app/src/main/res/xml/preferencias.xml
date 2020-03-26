@@ -10,6 +10,7 @@
             android:key="temaOscuro"
             android:summary="@string/tema_oscuro_summary"
             android:title="@string/tema_oscuro" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

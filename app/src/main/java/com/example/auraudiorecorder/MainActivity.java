@@ -12,6 +12,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -25,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,6 +36,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -43,6 +46,7 @@ import androidx.preference.PreferenceManager;
 // mi comentario Jorge
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private View rootView;
     private Toolbar toolbar;
     private Chronometer chronometer;
     private ImageView imageViewRecord, imageViewPlay, imageViewStop, imageViewPause;
@@ -58,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isPlaying = false;
     private boolean isRecording = false;
     private ServicioGrabacion mService;
+
+    SharedPreferences preferencias;
+    private boolean temaOscuro = false;
+    //private Window window;
 
     //para poder silenciar el dispositivo mientras se esta grabando audio
     AudioManager audioManager;
@@ -80,8 +88,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         //Toast.makeText(this, "El MainActivity ejecuto onCreate()" , Toast.LENGTH_SHORT).show();
         //Log.d("metodo", "El MainActivity ejecuto onCreate()");
+        preferencias = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean prefTemaOscuro = preferencias.getBoolean("temaOscuro", false);
+        //if(prefTemaOscuro){
+        if(AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
+            setTheme(R.style.darktheme);
+        }else{
+            setTheme(R.style.AppTheme);
+        }
+
 
         super.onCreate(savedInstanceState);
+
+        //this.window = getWindow();
 
         setContentView(R.layout.activity_main);
 
@@ -128,6 +147,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Log.d("metodo", "El MainActivity ejecuto onResume()");
         super.onResume();
 
+        /*==================================
+            RE-SETEA LAS CONFIGURACIONES
+        ==================================*/
+        preferencias = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean prefTemaOscuro = preferencias.getBoolean("temaOscuro", false);
+        //String prefFormatoGrabacion = preferencias.getString("formatoGrabacion", "1");
+        //String prefMuestreoGrabacion = preferencias.getString("muestreoGrabacion", "2");
+
+        if(temaOscuro != prefTemaOscuro){
+
+            if(prefTemaOscuro){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                setTheme(R.style.darktheme);
+                Toast.makeText(this, "Dark mode", Toast.LENGTH_SHORT).show();
+            }else{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                setTheme(R.style.AppTheme);
+                Toast.makeText(this, "Light mode", Toast.LENGTH_SHORT).show();
+            }
+
+            setContentView(R.layout.activity_main);
+            initViews();
+            temaOscuro = prefTemaOscuro;
+        }
+
+        /*==================================
+            RE-SETEA LAS CONFIGURACIONES
+        ==================================*/
+
     }
     @Override protected void onPause() {
         //Toast.makeText(this, "El MainActivity ejecuto onPause()", Toast.LENGTH_SHORT).show();
@@ -142,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override protected void onRestart() {
         //String estado = mService.estado;
 
-        //Toast.makeText(this, "El MainActivity ejecuto onRestart() y el estado del servicio es: " + estado, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "El MainActivity ejecuto onRestart()", Toast.LENGTH_LONG).show();
         //Log.d("metodo", "El MainActivity ejecuto onRestart() y el estado del servicio es: " + estado);
         super.onRestart();
     }
@@ -190,10 +238,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //establecer la toolbar
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("AUR audio recorder");
-        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        //toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        //toolbar.setTitleTextColor(getResources().getColor(R.color.grisTexto));
+
         setSupportActionBar(toolbar);
 
         linearLayoutRecorder = findViewById(R.id.linearLayoutRecorder);
+        //rootView = linearLayoutRecorder.getRootView();
+        rootView = findViewById(R.id.root_ActivityMain);
+
         chronometer = findViewById(R.id.chronometerTimer);
         chronometer.setBase(SystemClock.elapsedRealtime());
 

@@ -1,8 +1,8 @@
 <resources>
 
     <!-- Base application theme. -->
+    <!--
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -12,6 +12,7 @@
         <item name="titleTextColor">@color/grisTexto</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
     </style>
+    -->
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/colorAccent</item>
@@ -19,6 +20,58 @@
         <item name="android:textColor">@color/grisTexto</item>
         <item name="actionMenuTextColor">@color/grisTexto</item>
         <item name="titleTextColor">@color/grisTexto</item>
+    </style>
+
+    <!-- Light theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--los numeros del cronometro, boton de "stop"en la main, "boton de play" en la main-->
+        <item name="colorPrimary">#585858</item>
+        <!--barra de notificaciones del sistema,-->
+        <item name="colorPrimaryDark">#c8c8c8</item>
+        <!--color del punto de referencia de la seekbar-->
+        <item name="colorAccent">#d6aa00</item>
+
+        <!--background de la interfase-->
+        <item name="backgroundcolor">#d8d8d8</item>
+        <!--no se usa-->
+        <item name="textcolor">#383838</item>
+        <!--no se usa-->
+        <item name="tintcolor">#282828</item>
+        <!--no se usa-->
+        <item name="buttoncolor">#bbbbbb</item>
+
+
+        <!--<item name="android:colorForeground">#b2b2b2</item>-->
+        <!--color de los tres puntos en la barra de titulo(el boton que lleva a las opciones)-->
+        <item name="android:colorForeground">#383838</item>
+        <!--es el color del texto dentro del desplegable con opciones-->
+        <item name="android:textColor">#383838</item>
+        <!--es el color del texto "LISTA" que nos lleva a la RecordingListActivity-->
+        <item name="actionMenuTextColor">#383838</item>
+        <!--es el color del texto del nombre de la app-->
+        <item name="titleTextColor">#282828</item>
+
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
+    </style>
+
+
+    <!-- Dark theme. -->
+    <style name="darktheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#cdcdcd</item>
+        <item name="colorPrimaryDark">#383838</item>
+        <item name="colorAccent">#d6aa00</item>
+
+        <item name="backgroundcolor">#282828</item>
+        <item name="textcolor">#b8b8b8</item>
+        <item name="tintcolor">#b8b8b8</item>
+        <item name="buttoncolor">#333333</item>
+
+
+        <item name="android:colorForeground">#b8b8b8</item>
+        <item name="android:textColor">#383838</item>
+        <item name="actionMenuTextColor">#b8b8b8</item>
+        <item name="titleTextColor">#c8c8c8</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
     </style>
 
 </resources>
