@@ -172,31 +172,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             temaOscuro = prefTemaOscuro;
         }
 
-        /*if(temaOscuro != prefTemaOscuro && prefTemaOscuro){
-            //si se cambia el switch de tema oscuro en las preferencias se cambiaran los colores
-            Toast.makeText(this, "Dark mode", Toast.LENGTH_SHORT).show();
-
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            setTheme(R.style.darktheme);
-
-            setContentView(R.layout.activity_main);
-            initViews();
-
-        }else if(temaOscuro != prefTemaOscuro && !prefTemaOscuro){
-            //seteamos los colores claros
-            Toast.makeText(this, "Light mode", Toast.LENGTH_SHORT).show();
-
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            setTheme(R.style.AppTheme);
-
-            setContentView(R.layout.activity_main);
-            initViews();
-
-        }
-
-        temaOscuro = prefTemaOscuro;*/
-        //Toast.makeText(this, "tema oscuro esta en "+temaOscuro, Toast.LENGTH_SHORT).show();
-
         /*==================================
             RE-SETEA LAS CONFIGURACIONES
         ==================================*/
