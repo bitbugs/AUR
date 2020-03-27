@@ -99,6 +99,20 @@ public class RecordingListActivity extends AppCompatActivity {
         Log.d("Files", "Path: " + path);
         File directory = new File(path);
         File[] files = directory.listFiles();
+
+        //ordenar alfabeticamente el array de files
+        for(int i=0;i<(files.length-1);i++){
+            for(int j=i+1;j<files.length;j++){
+                if(files[i].compareTo(files[j])<0){
+                    //Intercambiamos valores
+                    File fileAuxiliar=files[i];
+                    files[i]=files[j];
+                    files[j]=fileAuxiliar;
+
+                }
+            }
+        }
+
         Log.d("Files", "Size: " + files.length);
 
         //no era distinto de null, es tamaño mayor que cero!
@@ -107,8 +121,9 @@ public class RecordingListActivity extends AppCompatActivity {
                 Log.d("Files", "FileName:" + files[i].getName());
                 String fileName = files[i].getName();
                 String recordingUri = root.getAbsolutePath() + "/AUR/Audios/" + fileName;
+                long fileSize = files[i].length();
 
-                Recording recording = new Recording(recordingUri, fileName,false);
+                Recording recording = new Recording(recordingUri, fileName,false, fileSize);
                 recordingArraylist.add(recording);
             }
 
