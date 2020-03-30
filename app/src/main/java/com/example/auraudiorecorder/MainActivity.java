@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         boolean prefTemaOscuro = preferencias.getBoolean("temaOscuro", false);
         //if(prefTemaOscuro){
         if(AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
-            setTheme(R.style.darktheme);
+            setTheme(R.style.AppTheme_DarkTheme);
         }else{
             setTheme(R.style.AppTheme);
         }
@@ -159,12 +159,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             if(prefTemaOscuro){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                setTheme(R.style.darktheme);
-                Toast.makeText(this, "Dark mode", Toast.LENGTH_SHORT).show();
+                setTheme(R.style.AppTheme_DarkTheme);
+                Toast.makeText(this, R.string.modo_oscuro, Toast.LENGTH_SHORT).show();
             }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 setTheme(R.style.AppTheme);
-                Toast.makeText(this, "Light mode", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.modo_claro, Toast.LENGTH_SHORT).show();
             }
 
             setContentView(R.layout.activity_main);
@@ -235,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //metodo para inicializar las vistas
     //*************************************
     private void initViews() {
+
         //establecer la toolbar
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("AUR audio recorder");

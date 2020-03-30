@@ -5,7 +5,7 @@
     android:id="@+id/itemLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/backgroundcolor"
+    android:background="?attr/backgroundColor"
     android:orientation="vertical"
     android:paddingStart="10dp"
     android:paddingTop="10dp"
@@ -38,20 +38,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Grabacion 001"
-                android:textColor="?attr/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <!--borrar-->
             <EditText
                 android:id="@+id/editTextRecordingName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textShortMessage"
-                android:text="editame y decime marta"
+                android:text="editar nombre grabacion"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:visibility="gone" />
+            <!--borrar-->
 
             <SeekBar
                 android:id="@+id/seekBar"
@@ -61,13 +62,14 @@
                 android:visibility="gone" />
 
             <View
-                android:id="@+id/linea"
+                android:id="@+id/linea1_acercaDe"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="20dp"
                 android:background="?attr/colorPrimary" />
 
+            <!--borrar-->
             <Button
                 android:id="@+id/btnCambiarNombre"
                 android:layout_width="wrap_content"
@@ -83,6 +85,7 @@
                 android:layout_gravity="center"
                 android:text="Cancelar"
                 tools:visibility="gone" />
+            <!--borrar-->
 
         </LinearLayout>
 
@@ -92,8 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/botonMore"
         android:text="125,0kb"
-        android:textSize="14sp"
-        android:textColor="?attr/colorPrimary" />
+        android:textSize="14sp" />
 
     <ImageButton
         android:id="@+id/botonMore"
@@ -101,7 +103,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_gravity="center_vertical|end"
-        android:background="?attr/backgroundcolor"
+        android:background="?attr/backgroundColor"
         android:contentDescription="@string/mas_opciones"
         app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
