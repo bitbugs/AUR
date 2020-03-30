@@ -86,15 +86,24 @@
 
         </LinearLayout>
 
+    <TextView
+        android:id="@+id/textViewFileSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/botonMore"
+        android:text="125,0kb"
+        android:textSize="14sp"
+        android:textColor="?attr/colorPrimary" />
+
     <ImageButton
-            android:id="@+id/botonMore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="center_vertical|end"
-            android:background="?attr/backgroundcolor"
-            android:contentDescription="@string/mas_opciones"
-            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+        android:id="@+id/botonMore"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center_vertical|end"
+        android:background="?attr/backgroundcolor"
+        android:contentDescription="@string/mas_opciones"
+        app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
 
 </RelativeLayout>

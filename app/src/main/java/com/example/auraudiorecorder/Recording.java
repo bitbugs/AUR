@@ -4,11 +4,13 @@ public class Recording {
     String Uri, fileName;
     boolean isPlaying = false;
     int lastProgress = 0;
+    long fileSize;
 
-    public Recording(String uri, String fileName, boolean isPlaying) {
+    public Recording(String uri, String fileName, boolean isPlaying, long fileSize) {
         Uri = uri;
         this.fileName = fileName;
         this.isPlaying = isPlaying;
+        this.fileSize = fileSize;
     }
 
     public String getUri() {
@@ -17,6 +19,10 @@ public class Recording {
 
     public String getFileName() {
         return fileName;
+    }
+
+    public String getFileSize() {
+        return ( ((float)fileSize) /1000 ) + " kB";
     }
 
     public boolean isPlaying() {

@@ -66,6 +66,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
     private void setUpData(final ViewHolder holder, final int position) {
         Recording recording = recordingArrayList.get(position);
         holder.textViewName.setText(recording.getFileName());
+        holder.textViewFileSize.setText(recording.getFileSize());
         //holder.editTextName.setText(recording.getFileName().replace(".mp3", ""));
 
         holder.botonMore.setOnClickListener(new View.OnClickListener() {
@@ -326,6 +327,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
         SeekBar seekBar;
         TextView textViewName;
         EditText editTextName;
+        TextView textViewFileSize;
 
         ImageButton botonMore;
 
@@ -355,6 +357,9 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
             botonMore = itemView.findViewById(R.id.botonMore);
             btnCambiarNombre = itemView.findViewById(R.id.btnCambiarNombre);
             btnCancelarCambiarNombre = itemView.findViewById(R.id.btnCancelarCambiarNombre);
+
+            textViewFileSize = itemView.findViewById(R.id.textViewFileSize);
+
 
             editTextName.setVisibility(View.GONE);
             btnCambiarNombre.setVisibility(View.GONE);
