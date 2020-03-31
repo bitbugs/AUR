@@ -34,7 +34,7 @@ public class RecordingListActivity extends AppCompatActivity {
         boolean prefTemaOscuro = preferencias.getBoolean("temaOscuro", false);
         //if(prefTemaOscuro){
         if(AppCompatDelegate.getDefaultNightMode()==AppCompatDelegate.MODE_NIGHT_YES){
-            setTheme(R.style.darktheme);
+            setTheme(R.style.AppTheme_DarkTheme);
         }else{
             setTheme(R.style.AppTheme);
         }
@@ -70,7 +70,7 @@ public class RecordingListActivity extends AppCompatActivity {
 
             if(prefTemaOscuro){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                setTheme(R.style.darktheme);
+                setTheme(R.style.AppTheme_DarkTheme);
                 Toast.makeText(this, "Dark mode", Toast.LENGTH_SHORT).show();
             }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);

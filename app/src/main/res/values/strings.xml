@@ -35,9 +35,14 @@
     <string name="grabacion_detenida">Grabación detenida.</string>
     <string name="pausado">Pausado.</string>
     <string name="reproduciendo">Reproduciendo.</string>
-    <string name="desea_borrar">¿Borrar el archivo?</string>
+    <string name="desea_borrar">¿Borrar el archivo </string>
     <string name="borrar">Borrar</string>
     <string name="cancelar">Cancelar</string>
-    <string name="borrar_grabacion">Borrar grabación</string>
-    <string name="se_eligio_borrar">se eligió BORRAR</string>
+    <string name="borrar_grabacion">¿Borrar grabación</string>
+    <string name="se_eligio_borrar">Se eligió BORRAR</string>
+    <string name="modo_oscuro">Modo oscuro</string>
+    <string name="modo_claro">Modo claro</string>
+    <string name="no_borrar">Se canceló el borrado</string>
+    <string name="se_eligio_adjuntar_nota">se eligió AGREGAR NOTA</string>
+    <string name="se_eligio_etiquetar">se eligió ETIQUETAR</string>
 </resources>

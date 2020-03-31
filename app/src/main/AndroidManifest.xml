@@ -38,7 +38,7 @@
             android:label="@string/sugerencias"
             android:theme="@style/AppTheme.Dialog">
         </activity>
-
+<!--anotar-->
         <activity
             android:name=".PreferenciasActivity"
             android:label="@string/preferencias"

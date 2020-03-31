@@ -1,13 +1,13 @@
 package com.example.auraudiorecorder;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -15,8 +15,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,10 +25,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,7 +82,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                                 //manejar el clic sobre Renombrar
 
                                 String nombre = recordingArrayList.get(position).getFileName().replace(".mp3", "");
-                                AlertDialog.Builder renameDialog = new AlertDialog.Builder(context);
+                                AlertDialog.Builder renameDialog = new AlertDialog.Builder(context, R.style.AppTheme_Dialog);
                                 renameDialog.setTitle(R.string.renombrar);
 
                                 //EditText view para ingresar el nombre
@@ -178,16 +173,21 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                                 context.startActivity(compartiraudio);
 
                                 break;
+
                             case R.id.actionEliminar:
                                 String archivo = recordingArrayList.get(position).getFileName();
                                 lanzarConfirmarBorrado(archivo, holder, position);
                                 //return true;
                                 break;
+
                             case R.id.actionAdjuntarNota:
                                 //manejar el clic sobre Adjuntar nota
+                                Toast.makeText(context, R.string.se_eligio_adjuntar_nota, Toast.LENGTH_SHORT).show();
                                 break;
+
                             case R.id.actionEtiquetar:
                                 //manejar el clic sobre Etiquetar
+                                Toast.makeText(context, R.string.se_eligio_etiquetar, Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         return false;
@@ -277,17 +277,18 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
     private void lanzarConfirmarBorrado(final String archivo, final ViewHolder miViewHolder, final int position) {
 
         final TextView alerta = new TextView(context);
-        new AlertDialog.Builder(context)
+        new AlertDialog.Builder(context, R.style.AppTheme_Dialog)
                 .setTitle(R.string.borrar_grabacion)
-                .setMessage(R.string.desea_borrar + " -> " + archivo)
+                .setMessage(archivo + " ?")
                 .setView(alerta)
                 .setPositiveButton(R.string.borrar, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        File root = android.os.Environment.getExternalStorageDirectory();
+                        File root = Environment.getExternalStorageDirectory();
                         String path = root.getAbsolutePath() + "/AUR/Audios/";
 
                         File audio = new File(path + archivo);
+
                         //llamar accion de borrar
                         audio.delete();
 
@@ -310,7 +311,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //llamar accion de NO borrar
-                        Toast.makeText(context, "se eligio NO BORRAR", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.no_borrar, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .show();
@@ -348,7 +349,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
             super(itemView);
 
             itemGrabacion = itemView.findViewById(R.id.itemLayout);
-            linea = itemView.findViewById(R.id.linea);
+            linea = itemView.findViewById(R.id.linea1_acercaDe);
 
             imageViewPlay = itemView.findViewById(R.id.imageViewPlay);
             seekBar = itemView.findViewById(R.id.seekBar);

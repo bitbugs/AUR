@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundcolor"
+    android:background="?attr/backgroundColor"
     tools:context=".RecordingListActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -22,15 +22,13 @@
             android:id="@+id/tabTodas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/todas"
-            android:textColor="?attr/colorPrimary"/>
+            android:text="@string/todas" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabCategorias"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/categorias"
-            android:textColor="?attr/colorPrimary" />
+            android:text="@string/categorias" />
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.recyclerview.widget.RecyclerView
