@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -87,7 +88,10 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
                                 //EditText view para ingresar el nombre
                                 final EditText input = new EditText(context);
+
                                 input.setText(nombre);
+
+                                //input.setBackgroundColor(R.color.colorPrimary);
                                 input.setSelectAllOnFocus(true);
                                 //input.setText(holder.textViewName.getText());
                                 renameDialog.setView(input);
@@ -292,8 +296,13 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                         //llamar accion de borrar
                         audio.delete();
 
+                        //relanzar la activity conservando la main como activity anterior
+                        Intent intent = new Intent(context, RecordingListActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        context.startActivity(intent);
+
                         //oculta la vista del audio en la RecordingListActivity o reinicia la activity
-                        miViewHolder.imageViewPlay.setVisibility(View.GONE);
+                        /*miViewHolder.imageViewPlay.setVisibility(View.GONE);
                         miViewHolder.textViewName.setVisibility(View.GONE);
                         miViewHolder.botonMore.setVisibility(View.GONE);
 
@@ -301,7 +310,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                         miViewHolder.itemGrabacion.setPadding(0,0,0,0);
                         miViewHolder.itemGrabacion.setPaddingRelative(0,0,0,0);
 
-                        miViewHolder.itemGrabacion.setVisibility(View.GONE);
+                        miViewHolder.itemGrabacion.setVisibility(View.GONE);*/
                         //notifyItemRangeRemoved(position+1, position);
 
                         //Toast.makeText(context, R.string.se_eligio_borrar, Toast.LENGTH_SHORT).show();
@@ -479,6 +488,12 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
             try {
                 mPlayer.setDataSource(recordingUri);
                 mPlayer.prepare();
+                //regresar a cero la reproduccion
+                if(audio.lastProgress >= (mPlayer.getDuration()-1000) ){
+                    //Toast.makeText(context, "el ultimo progreso esta muy cerca del final", Toast.LENGTH_SHORT).show();
+                    audio.lastProgress = 0;
+                }
+                //regresar a cero la reproduccion
                 mPlayer.seekTo(audio.lastProgress);
                 mPlayer.start();
             } catch (IOException e) {
@@ -492,6 +507,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     audio.setPlaying(false);
+                    isPlaying = false;
                     notifyItemChanged(position);
                 }
             });
