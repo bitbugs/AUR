@@ -6,12 +6,12 @@
     <string name="preferencias">Preferences</string>
     <string name="lista">List</string>
     <string name="acercaDeText">Developed by bitbugs, under the 2nd year project of the BIT program. bitbugs\'s members are: Jorge Arcelus, Rafael Burgueño and Soledad Echinope.</string>
-    <string name="tipsText">On this window you can see different tips for using the application, so that users can take better advantage of the app\'s capabilities.</string>
+    <string name="tipsText">On this window you can see different tips for using the application, so that users can take better advantage of the application\'s capabilities.</string>
     <string name="no_se_encontraron_grabaciones">No records where found.</string>
-    <string name="reproducir">play</string>
-    <string name="pausar">pause</string>
-    <string name="grabar">record</string>
-    <string name="detener">stop</string>
+    <string name="reproducir">Play</string>
+    <string name="pausar">Pause</string>
+    <string name="grabar">Record</string>
+    <string name="detener">Stop</string>
     <string name="lista_grabaciones_title">Recordings List</string>
     <string name="apariencia">Appearance</string>
     <string name="opciones_de_grabacion">Recording options</string>
@@ -36,7 +36,7 @@
     <string name="grabacion_detenida">Recording stopped.</string>
     <string name="pausado">Paused</string>
     <string name="reproduciendo">Playing</string>
-    <string name="desea_borrar">Delete the file </string>
+    <string name="desea_borrar">Delete the file</string>
     <string name="borrar">Delete</string>
     <string name="cancelar">Cancel</string>
     <string name="borrar_grabacion">Delete Recording</string>
