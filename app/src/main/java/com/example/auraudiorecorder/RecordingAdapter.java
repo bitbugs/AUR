@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -93,8 +93,15 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
                                 //input.setBackgroundColor(R.color.colorPrimary);
                                 input.setSelectAllOnFocus(true);
+
+                                //generar un layout para contener el EditText, con un tamaño mínimo y con padding, para mantener la estética
+                                final FrameLayout layout = new FrameLayout(context);
+                                layout.setMinimumWidth(800);
+                                layout.setPaddingRelative(50,15,50,0);
+                                layout.addView(input);
+
                                 //input.setText(holder.textViewName.getText());
-                                renameDialog.setView(input);
+                                renameDialog.setView(layout);
 
                                 renameDialog.setPositiveButton(R.string.renombrar, new DialogInterface.OnClickListener() {
 
@@ -135,7 +142,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
                                     }
                                 });
-                                renameDialog.setNegativeButton(R.string.cancelar, null);
+                                //renameDialog.setNegativeButton(R.string.cancelar, null);
                                 renameDialog.create();
                                 renameDialog.show();
                                 //input.requestFocus();
@@ -181,17 +188,35 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                             case R.id.actionEliminar:
                                 String archivo = recordingArrayList.get(position).getFileName();
                                 lanzarConfirmarBorrado(archivo, holder, position);
-                                //return true;
                                 break;
 
                             case R.id.actionAdjuntarNota:
                                 //manejar el clic sobre Adjuntar nota
-                                Toast.makeText(context, R.string.se_eligio_adjuntar_nota, Toast.LENGTH_SHORT).show();
+                                lanzarAgregarNota();
                                 break;
 
-                            case R.id.actionEtiquetar:
+                            //case R.id.actionEtiquetar:
                                 //manejar el clic sobre Etiquetar
-                                Toast.makeText(context, R.string.se_eligio_etiquetar, Toast.LENGTH_SHORT).show();
+                             //   break;
+
+                            case R.id.tagClases:
+                                //manejar el clic sobre Etiquetar>Clases
+                                Toast.makeText(context, "Etiqueta CLASES", Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case R.id.tagEntrevistas:
+                                //manejar el clic sobre Etiquetar>Clases
+                                Toast.makeText(context, "Etiqueta ENTREVISTAS", Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case R.id.tagFavoritos:
+                                //manejar el clic sobre Etiquetar>Clases
+                                Toast.makeText(context, "Etiqueta FAVORITOS", Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case R.id.tagNotasPersonales:
+                                //manejar el clic sobre Etiquetar>Clases
+                                Toast.makeText(context, "Etiqueta NOTAS PERSONALES", Toast.LENGTH_SHORT).show();
                                 break;
                         }
                         return false;
@@ -283,7 +308,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
         final TextView alerta = new TextView(context);
         new AlertDialog.Builder(context, R.style.AppTheme_Dialog)
                 .setTitle(R.string.borrar_grabacion)
-                .setMessage(archivo + " ?")
+                .setMessage(archivo + "?")
                 .setView(alerta)
                 .setPositiveButton(R.string.borrar, new DialogInterface.OnClickListener() {
                     @Override
@@ -316,14 +341,44 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                         //Toast.makeText(context, R.string.se_eligio_borrar, Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //llamar accion de NO borrar
-                        Toast.makeText(context, R.string.no_borrar, Toast.LENGTH_SHORT).show();
-                    }
-                })
+//                .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        //llamar accion de NO borrar
+//                        Toast.makeText(context, R.string.no_borrar, Toast.LENGTH_SHORT).show();
+//                    }
+//                })
                 .show();
+    }
+
+
+    private void lanzarAgregarNota() {
+
+        AlertDialog.Builder newNoteDialog = new AlertDialog.Builder(context, R.style.AppTheme_Dialog);
+        newNoteDialog.setTitle(R.string.adjuntar_nota);
+        newNoteDialog.setMessage(R.string.nueva_nota);
+
+        //EditText view para ingresar la nota
+        final EditText input = new EditText(context);
+        input.setHint(R.string.escriba_nota);
+
+        //generar un layout para contener el EditText, con un tamaño mínimo y con padding, para mantener la estética
+        final FrameLayout layout = new FrameLayout(context);
+        layout.setMinimumWidth(800);
+        layout.setPaddingRelative(50,15,50,0);
+        layout.addView(input);
+
+        newNoteDialog.setView(layout);
+
+        newNoteDialog.setPositiveButton(R.string.adjuntar, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //llamar acción de guardar la nota para adjuntar
+            }
+        });
+        //newNoteDialog.setNegativeButton(R.string.cancelar, null);
+        newNoteDialog.create();
+        newNoteDialog.show();
     }
 
 

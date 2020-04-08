@@ -24,8 +24,7 @@
     <string name="categorias">Categorías</string>
     <string name="renombrar">Renombrar</string>
     <string name="compartir">Compartir</string>
-    <string name="eliminar">Eliminar</string>
-    <string name="adjuntar_note">Adjuntar nota</string>
+    <string name="adjuntar_nota">Adjuntar nota</string>
     <string name="etiquetar">Etiquetar</string>
     <string name="mas_opciones">Más opciones</string>
     <string name="grabacion_guardada">La grabación fue guardada con éxito.</string>
@@ -45,4 +44,11 @@
     <string name="no_borrar">Se canceló el borrado</string>
     <string name="se_eligio_adjuntar_nota">Se eligió AGREGAR NOTA</string>
     <string name="se_eligio_etiquetar">Se eligió ETIQUETAR</string>
+    <string name="nueva_nota">Nueva nota</string>
+    <string name="escriba_nota">Escriba la nota</string>
+    <string name="adjuntar">Adjuntar</string>
+    <string name="clases">Clases</string>
+    <string name="entrevistas">Entrevistas</string>
+    <string name="favoritos">Favoritos</string>
+    <string name="notas_personales">Notas personales</string>
 </resources>

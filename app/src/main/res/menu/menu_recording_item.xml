@@ -19,14 +19,13 @@
     <item
         android:id="@+id/actionEliminar"
         android:orderInCategory="15"
-        android:title="@string/eliminar"
-        app:showAsAction="never|withText">
-    </item>
+        android:title="@string/borrar"
+        app:showAsAction="never|withText"></item>
 
     <item
         android:id="@+id/actionAdjuntarNota"
         android:orderInCategory="20"
-        android:title="@string/adjuntar_note"
+        android:title="@string/adjuntar_nota"
         app:showAsAction="never|withText">
     </item>
 
@@ -35,6 +34,22 @@
         android:orderInCategory="25"
         android:title="@string/etiquetar"
         app:showAsAction="never|withText">
+        <menu>
+            <item
+                android:id="@+id/tagClases"
+                android:title="@string/clases" />
+            <item
+                android:id="@+id/tagEntrevistas"
+                android:title="@string/entrevistas" />
+            <item
+                android:id="@+id/tagFavoritos"
+                android:title="@string/favoritos" />
+            <item
+                android:id="@+id/tagNotasPersonales"
+                android:title="@string/notas_personales" />
+
+        </menu>
+
     </item>
 
 </menu>
