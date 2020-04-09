@@ -25,8 +25,7 @@
     <string name="categorias">Categories</string>
     <string name="renombrar">Rename</string>
     <string name="compartir">Share</string>
-    <string name="eliminar">Delete</string>
-    <string name="adjuntar_note">Attach note</string>
+    <string name="adjuntar_nota">Attach note</string>
     <string name="etiquetar">Tag</string>
     <string name="mas_opciones">More options</string>
     <string name="grabacion_guardada">The recording was successfully saved.</string>
@@ -46,4 +45,11 @@
     <string name="no_borrar">Deleted was cancelled</string>
     <string name="se_eligio_adjuntar_nota">ATTACH NOTE was selected</string>
     <string name="se_eligio_etiquetar">TAG was selected</string>
+    <string name="nueva_nota">New note</string>
+    <string name="escriba_nota">Type the note</string>
+    <string name="adjuntar">Attach</string>
+    <string name="clases">Lectures</string>
+    <string name="entrevistas">Interviews</string>
+    <string name="favoritos">Favorites</string>
+    <string name="notas_personales">Personal notes</string>
 </resources>
