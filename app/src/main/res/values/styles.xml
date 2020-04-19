@@ -32,8 +32,8 @@
     </style>
 
     <style name="AppTheme.Dialog.DarkTheme" parent="Theme.AppCompat.Light.Dialog">
-        <item name="backgroundColor">#303030</item>
         <item name="colorAccent">#D60000</item>
+        <item name="backgroundColor">#303030</item>
         <item name="android:colorForeground">@color/grisTexto</item>
         <item name="android:textColor">@color/grisTexto_DarkTheme</item>
         <item name="actionMenuTextColor">@color/grisTexto_DarkTheme</item>

@@ -26,6 +26,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
@@ -85,7 +86,11 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
                                 String nombre = recordingArrayList.get(position).getFileName().replace(".mp3", "");
                                 AlertDialog.Builder renameDialog = new AlertDialog.Builder(context, R.style.AppTheme_Dialog);
+                                //AlertDialog.Builder renameDialog = new AlertDialog.Builder(context);
+                                //AlertDialog.Builder renameDialog = new AlertDialog.Builder(context, R.style.AppTheme_DarkTheme);
+
                                 renameDialog.setTitle(R.string.renombrar);
+
 
                                 //EditText view para ingresar el nombre
                                 final EditText input = new EditText(context);
@@ -93,6 +98,10 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                                 input.setText(nombre);
 
                                 //input.setBackgroundColor(R.color.colorPrimary);
+                                input.setTextColor(R.color.grisTexto);
+                                input.setCursorVisible(true);
+                                input.setFocusedByDefault(true);
+
                                 input.setSelectAllOnFocus(true);
 
                                 //generar un layout para contener el EditText, con un tamaño mínimo y con padding, para mantener la estética
