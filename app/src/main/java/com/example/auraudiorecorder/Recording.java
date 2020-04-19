@@ -22,7 +22,7 @@ public class Recording {
     }
 
     public String getFileSize() {
-        return ( ((float)fileSize) /1000 ) + " kB";
+        return ( String.format("%.1f", ((float)fileSize) /1000 ) ) + " kB";
     }
 
     public boolean isPlaying() {

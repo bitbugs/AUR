@@ -44,7 +44,8 @@
         android:paddingRight="20dp"
         android:paddingBottom="0dp"
         android:text="@string/acercaDeText"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        />
 
     <ImageView
         android:id="@+id/imageView_logo_bitbugs"
@@ -53,5 +54,5 @@
         android:layout_marginStart="200dp"
         android:layout_weight="0"
         android:contentDescription="logo bitbugs para Acerca De"
-        app:srcCompat="@drawable/bitbugs_logo" />
+        app:srcCompat="@drawable/bitbugs_logo"/>
 </LinearLayout>

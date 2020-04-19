@@ -61,9 +61,10 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
     private void setUpData(final ViewHolder holder, final int position) {
         Recording recording = recordingArrayList.get(position);
-        holder.textViewName.setText(recording.getFileName());
-        holder.textViewFileSize.setText(recording.getFileSize());
+        //holder.textViewName.setText(recording.getFileName());
+        holder.textViewName.setText(recording.getFileName().replace(".mp3", ""));
         //holder.editTextName.setText(recording.getFileName().replace(".mp3", ""));
+        holder.textViewFileSize.setText(recording.getFileSize());
 
         holder.botonMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +130,8 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
                                         //Rename
                                         if (audio.renameTo(audioConNuevoNombre)) {
-                                            holder.textViewName.setText(nuevoNombre + ".mp3");
+                                            //holder.textViewName.setText(nuevoNombre + ".mp3");
+                                            holder.textViewName.setText(nuevoNombre);
                                             Log.d("CONFIRMACION", "se cambio el nombre correctamente a: "+nuevoNombre);
                                         } else {
                                             Log.d("CONFIRMACION", "ocurrio un error al cambiar el nombre del archivo: "+nombre);
