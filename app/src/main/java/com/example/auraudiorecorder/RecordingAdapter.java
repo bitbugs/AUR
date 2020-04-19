@@ -100,7 +100,7 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                                 //input.setBackgroundColor(R.color.colorPrimary);
                                 input.setTextColor(R.color.grisTexto);
                                 input.setCursorVisible(true);
-                                input.setFocusedByDefault(true);
+                                //input.setFocusedByDefault(true);
 
                                 input.setSelectAllOnFocus(true);
 
