@@ -1,58 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/TextViewAcercaDe"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/linea1_acercaDe"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="20dp"
-        android:background="?attr/colorPrimaryDark" />
-
-    <ImageView
-        android:id="@+id/imageView_logoApp"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:contentDescription="logo app para Acerca De"
-        android:paddingLeft="10dp"
-        android:paddingTop="15dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp"
-        app:srcCompat="@drawable/logo_app_2colores_con_txt" />
-
-    <View
-        android:id="@+id/linea2_acercaDe"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="20dp"
-        android:background="?attr/colorPrimaryDark" />
-
-    <TextView
-        android:id="@+id/textView"
+    <LinearLayout
+        android:id="@+id/TextViewAcercaDe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingTop="30dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="0dp"
-        android:text="@string/acercaDeText"
-        android:textSize="18sp"
-        />
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/imageView_logo_bitbugs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
-        android:layout_weight="0"
-        android:contentDescription="logo bitbugs para Acerca De"
-        app:srcCompat="@drawable/bitbugs_logo"/>
-</LinearLayout>
+        <View
+            android:id="@+id/linea1_acercaDe"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:background="?attr/colorPrimaryDark" />
+
+        <ImageView
+            android:id="@+id/imageView_logoApp"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="logo app para Acerca De"
+            android:paddingLeft="10dp"
+            android:paddingTop="15dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
+            app:srcCompat="@drawable/logo_app_2colores_con_txt" />
+
+        <View
+            android:id="@+id/linea2_acercaDe"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:background="?attr/colorPrimaryDark" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingTop="30dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="0dp"
+            android:text="@string/acercaDeText"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/imageView_logo_bitbugs"
+            android:layout_width="match_parent"
+            android:layout_height="138dp"
+            android:layout_marginStart="200dp"
+            android:layout_weight="0"
+            android:contentDescription="logo bitbugs para Acerca De"
+            app:srcCompat="@drawable/bitbugs_logo" />
+    </LinearLayout>
+</ScrollView>
