@@ -71,11 +71,11 @@ public class RecordingListActivity extends AppCompatActivity {
             if(prefTemaOscuro){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 setTheme(R.style.AppTheme_DarkTheme);
-                Toast.makeText(this, "Dark mode", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Dark mode", Toast.LENGTH_SHORT).show();
             }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 setTheme(R.style.AppTheme);
-                Toast.makeText(this, "Light mode", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Light mode", Toast.LENGTH_SHORT).show();
             }
 
             textViewNoRecordings = findViewById(R.id.textViewNoRecordings);

@@ -26,6 +26,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
@@ -61,9 +62,10 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
     private void setUpData(final ViewHolder holder, final int position) {
         Recording recording = recordingArrayList.get(position);
-        holder.textViewName.setText(recording.getFileName());
-        holder.textViewFileSize.setText(recording.getFileSize());
+        //holder.textViewName.setText(recording.getFileName());
+        holder.textViewName.setText(recording.getFileName().replace(".mp3", ""));
         //holder.editTextName.setText(recording.getFileName().replace(".mp3", ""));
+        holder.textViewFileSize.setText(recording.getFileSize());
 
         holder.botonMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +86,11 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
                                 String nombre = recordingArrayList.get(position).getFileName().replace(".mp3", "");
                                 AlertDialog.Builder renameDialog = new AlertDialog.Builder(context, R.style.AppTheme_Dialog);
+                                //AlertDialog.Builder renameDialog = new AlertDialog.Builder(context);
+                                //AlertDialog.Builder renameDialog = new AlertDialog.Builder(context, R.style.AppTheme_DarkTheme);
+
                                 renameDialog.setTitle(R.string.renombrar);
+
 
                                 //EditText view para ingresar el nombre
                                 final EditText input = new EditText(context);
@@ -92,6 +98,10 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
                                 input.setText(nombre);
 
                                 //input.setBackgroundColor(R.color.colorPrimary);
+                                input.setTextColor(R.color.grisTexto);
+                                input.setCursorVisible(true);
+                                input.setFocusedByDefault(true);
+
                                 input.setSelectAllOnFocus(true);
 
                                 //generar un layout para contener el EditText, con un tamaño mínimo y con padding, para mantener la estética
@@ -129,7 +139,8 @@ public class RecordingAdapter extends RecyclerView.Adapter<RecordingAdapter.View
 
                                         //Rename
                                         if (audio.renameTo(audioConNuevoNombre)) {
-                                            holder.textViewName.setText(nuevoNombre + ".mp3");
+                                            //holder.textViewName.setText(nuevoNombre + ".mp3");
+                                            holder.textViewName.setText(nuevoNombre);
                                             Log.d("CONFIRMACION", "se cambio el nombre correctamente a: "+nuevoNombre);
                                         } else {
                                             Log.d("CONFIRMACION", "ocurrio un error al cambiar el nombre del archivo: "+nombre);

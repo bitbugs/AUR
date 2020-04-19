@@ -160,11 +160,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(prefTemaOscuro){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 setTheme(R.style.AppTheme_DarkTheme);
-                Toast.makeText(this, R.string.modo_oscuro, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, R.string.modo_oscuro, Toast.LENGTH_SHORT).show();
             }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 setTheme(R.style.AppTheme);
-                Toast.makeText(this, R.string.modo_claro, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, R.string.modo_claro, Toast.LENGTH_SHORT).show();
             }
 
             setContentView(R.layout.activity_main);

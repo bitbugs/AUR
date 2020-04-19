@@ -15,6 +15,7 @@
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">#D60000</item>
+        <item name="backgroundColor">@color/blanco</item>
         <item name="android:colorForeground">@color/grisTexto</item>
         <item name="android:textColor">@color/grisTexto</item>
         <item name="actionMenuTextColor">@color/grisTexto</item>
@@ -25,6 +26,15 @@
     <style name="AppTheme.DarkTheme" parent="ThemeOverlay.AppCompat.Dark">
         <item name="backgroundColor">#303030</item>
         <item name="android:textColorHighlight">#80D60000</item>
+        <item name="android:textColor">@color/grisTexto_DarkTheme</item>
+        <item name="actionMenuTextColor">@color/grisTexto_DarkTheme</item>
+        <item name="titleTextColor">@color/grisTexto_DarkTheme</item>
+    </style>
+
+    <style name="AppTheme.Dialog.DarkTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">#D60000</item>
+        <item name="backgroundColor">#303030</item>
+        <item name="android:colorForeground">@color/grisTexto</item>
         <item name="android:textColor">@color/grisTexto_DarkTheme</item>
         <item name="actionMenuTextColor">@color/grisTexto_DarkTheme</item>
         <item name="titleTextColor">@color/grisTexto_DarkTheme</item>
